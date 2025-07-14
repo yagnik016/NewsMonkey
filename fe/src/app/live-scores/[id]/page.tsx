@@ -2,10 +2,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import type { Score } from '@/types';
 
 export default function LiveScoreDetailPage() {
   const { id } = useParams();
-  const [score, setScore] = useState<any>(null);
+  const [score, setScore] = useState<Score | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -50,7 +51,7 @@ export default function LiveScoreDetailPage() {
           </div>
           <div className="text-gray-700 dark:text-gray-200 mb-4">{score.currentInning}</div>
           <div className="space-y-4">
-            {score.events?.length > 0 ? score.events.map((event: any, i: number) => (
+            {Array.isArray(score?.events) && score.events.length > 0 ? score.events.map((event, i: number) => (
               <div key={i} className="bg-gradient-to-r from-green-100/60 to-blue-100/60 dark:from-green-900/40 dark:to-blue-900/40 rounded-lg p-4 shadow animate-fade-in-entry">
                 <div className="flex items-center mb-2">
                   <span className="w-2 h-2 bg-green-500 dark:bg-green-300 rounded-full animate-pulse mr-2"></span>

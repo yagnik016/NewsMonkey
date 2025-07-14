@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { NewsCard } from "@/components/NewsCard";
 import Link from "next/link";
+import type { News } from '@/types';
 
 export default function CategoryPage() {
   const { slug } = useParams();
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
@@ -25,7 +26,6 @@ export default function CategoryPage() {
         setError(true);
         setLoading(false);
       });
-    // eslint-disable-next-line
   }, [slug, page]);
 
   return (
@@ -51,13 +51,13 @@ export default function CategoryPage() {
             {news.map((item) => (
               <NewsCard
                 key={item._id}
-                title={item.title}
-                summary={item.summary}
-                category={item.category?.name || slug}
-                publishedAt={item.publishedAt || item.createdAt}
+                title={item.title || ''}
+                summary={item.summary || ''}
+                category={item.category?.name || slug?.toString() || ''}
+                publishedAt={item.publishedAt || item.createdAt || ''}
                 imageUrl={item.images?.[0] || '/api/placeholder/400/250'}
-                isBreaking={item.isBreaking}
-                slug={item._id}
+                isBreaking={item.isBreaking || false}
+                slug={item._id || ''}
                 source={item.source}
                 externalUrl={item.externalUrl}
               />

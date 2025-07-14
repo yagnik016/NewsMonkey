@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import type { Blog, BlogEntry } from '@/types';
+import Image from 'next/image';
 
 export default function LiveBlogDetailPage() {
   const { id } = useParams();
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -40,7 +42,7 @@ export default function LiveBlogDetailPage() {
           </div>
           <p className="text-lg text-gray-700 dark:text-gray-200 mb-6">{blog.description}</p>
           <div className="space-y-6">
-            {blog.entries?.length > 0 ? blog.entries.map((entry: any, i: number) => (
+            {Array.isArray(blog.entries) && blog.entries.length > 0 ? blog.entries.map((entry: BlogEntry, i: number) => (
               <div key={i} className="bg-gradient-to-r from-pink-100/60 to-yellow-100/60 dark:from-pink-900/40 dark:to-yellow-900/40 rounded-lg p-4 shadow flex flex-col animate-fade-in-entry">
                 <div className="flex items-center mb-2">
                   <span className="w-2 h-2 bg-pink-500 dark:bg-pink-300 rounded-full animate-pulse mr-2"></span>
@@ -48,7 +50,7 @@ export default function LiveBlogDetailPage() {
                   <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString() : ''}</span>
                 </div>
                 <div className="text-gray-900 dark:text-gray-100 text-base mb-1">{entry.content}</div>
-                {entry.image && <img src={entry.image} alt="entry" className="w-full h-48 object-cover rounded mt-2" />}
+                {entry.image && <Image src={entry.image} alt="entry" width={800} height={200} className="w-full h-48 object-cover rounded mt-2" />}
                 {entry.author && <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">By {entry.author}</div>}
               </div>
             )) : <div className="text-gray-500 dark:text-gray-400">No entries yet.</div>}

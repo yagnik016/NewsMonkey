@@ -14,18 +14,34 @@ async function fetchCategories() {
     const res = await fetch('http://localhost:3001/api/v1/news/categories', { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch categories');
     return res.json();
-  } catch (e) {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error fetching categories:', error.message);
+      return { error: true };
+    }
     return { error: true };
   }
 }
 
 export default async function HomePage() {
-  let newsData: any[] = [];
+  let newsData: {
+    url: string;
+    title: string;
+    description: string;
+    source?: {
+      name: string;
+    };
+    publishedAt: string;
+    urlToImage?: string;
+  }[] = [];
   let newsError = false;
   try {
     newsData = await fetchNewsApi({ country: 'us', category: 'general', page: 1, pageSize: 6 });
-  } catch (e) {
-    newsError = true;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Error fetching news:', error.message);
+      newsError = true;
+    }
   }
   const categoriesData = await fetchCategories();
 
@@ -80,7 +96,16 @@ export default async function HomePage() {
             <div className="text-red-600 dark:text-yellow-400">Failed to load news. Please try again later.</div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {newsData?.length > 0 ? newsData.map((item: any, idx: number) => (
+              {newsData?.length > 0 ? newsData.map((item: {
+                url: string;
+                title: string;
+                description: string;
+                source?: {
+                  name: string;
+                };
+                publishedAt: string;
+                urlToImage?: string;
+              }) => (
                 <NewsCard
                   key={item.url}
                   title={item.title}

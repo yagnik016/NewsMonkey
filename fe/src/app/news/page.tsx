@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { FaRegNewspaper, FaBusinessTime, FaFilm, FaHeartbeat, FaFlask, FaFutbol, FaLaptopCode, FaRegBookmark, FaBookmark, FaShareAlt, FaArrowUp } from "react-icons/fa";
 import { IconType } from "react-icons";
+import Image from "next/image";
 
 const TOPICS = [
   { label: "General", value: "general", color: "from-pink-500 to-yellow-500", icon: FaRegNewspaper },
@@ -75,7 +76,6 @@ export default function NewsPage() {
       }
     };
     fetchNews();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, selectedTopic]);
 
   // Infinite scroll
@@ -187,9 +187,11 @@ export default function NewsPage() {
                 style={{ animationDelay: mounted ? `${idx * 60}ms` : "0ms", animationFillMode: "both" }}
               >
                 <div className="overflow-hidden rounded-t-xl relative">
-                  <img
+                  <Image
                     src={article.urlToImage || "/placeholder.jpg"}
                     alt={article.title}
+                    width={600}
+                    height={300}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500 bg-neutral-700"
                   />
                   {isNewArticle(article.publishedAt) && (

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import type { Score } from '@/types';
 
 export default function LiveScoresPage() {
-  const [scores, setScores] = useState<any[]>([]);
+  const [scores, setScores] = useState<Score[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 

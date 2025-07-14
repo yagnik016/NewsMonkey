@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import { NewsCard } from "@/components/NewsCard";
 import Link from "next/link";
+import type { News } from '@/types';
 
 export default function CurrentAffairsPage() {
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
@@ -23,7 +24,6 @@ export default function CurrentAffairsPage() {
         setError(true);
         setLoading(false);
       });
-    // eslint-disable-next-line
   }, [page]);
 
   return (
@@ -52,7 +52,7 @@ export default function CurrentAffairsPage() {
                 title={item.title}
                 summary={item.summary}
                 category={item.category?.name || 'Current Affairs'}
-                publishedAt={item.publishedAt || item.createdAt}
+                publishedAt={item.publishedAt || item.createdAt || ''}
                 imageUrl={item.images?.[0] || '/api/placeholder/400/250'}
                 isBreaking={item.isBreaking}
                 slug={item._id}

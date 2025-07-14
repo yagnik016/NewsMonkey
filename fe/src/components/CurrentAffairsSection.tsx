@@ -2,9 +2,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { NewsCard } from "@/components/NewsCard";
+import type { News } from '@/types';
 
 export function CurrentAffairsSection() {
-  const [news, setNews] = useState<any[]>([]);
+  const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -47,7 +48,7 @@ export function CurrentAffairsSection() {
                 title={item.title}
                 summary={item.summary}
                 category={item.category?.name || 'Current Affairs'}
-                publishedAt={item.publishedAt || item.createdAt}
+                publishedAt={item.publishedAt || item.createdAt || ''}
                 imageUrl={item.images?.[0] || '/api/placeholder/400/250'}
                 isBreaking={item.isBreaking}
                 slug={item._id}
