@@ -13,6 +13,7 @@ export default function LiveBlogsPage() {
     fetch("http://localhost:3001/api/v1/live-blogs")
       .then((res) => res.json())
       .then((data) => {
+        console.log("data", data);
         setBlogs(Array.isArray(data) ? data : []);
         setLoading(false);
       })
