@@ -25,43 +25,43 @@ export function NewsCard({
   externalUrl
 }: NewsCardProps) {
   return (
-    <div className="rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300" style={{ background: 'var(--background)' }}>
-      <div className="relative">
+    <div
+      className="rounded-2xl shadow-xl overflow-hidden bg-[var(--card-bg)] hover:shadow-2xl transition-all duration-300 group border border-[var(--border)]"
+      style={{ boxShadow: 'var(--card-shadow)', borderRadius: 'var(--radius)' }}
+    >
+      <div className="relative w-full h-48 overflow-hidden">
         <Image
           src={imageUrl}
           alt={title}
-          width={400}
-          height={250}
-          className="w-full h-48 object-cover bg-gray-100 dark:bg-gray-800"
+          fill
+          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
           unoptimized
         />
         {isBreaking && (
-          <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold shadow dark:shadow-yellow-400">
+          <div className="absolute top-3 left-3 bg-[var(--secondary)] text-white px-3 py-1 rounded-full text-xs font-bold shadow">
             BREAKING
           </div>
         )}
-        <div className="absolute top-2 right-2 bg-black bg-opacity-75 dark:bg-gray-800 dark:bg-opacity-80 text-white px-2 py-1 rounded text-xs">
+        <div className="absolute top-3 right-3 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-semibold">
           {category}
         </div>
       </div>
-      <div className="p-4">
-        <div className="flex items-center text-sm text-gray-700 dark:text-gray-400 mb-2">
+      <div className="p-5 flex flex-col gap-2">
+        <div className="flex items-center text-xs text-[var(--muted-foreground)] font-medium gap-2">
           <span>{new Date(publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-          <span className="mx-2">•</span>
+          <span>•</span>
           <span>{category}</span>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 !opacity-100">
-          <Link href={`/news/${slug}`} className="hover:text-red-600 dark:hover:text-yellow-400 !opacity-100">
-            {title}
-          </Link>
+        <h3 className="text-xl font-extrabold text-[var(--foreground)] leading-tight group-hover:text-[var(--primary)] transition-colors line-clamp-2">
+          <Link href={`/news/${slug}`}>{title}</Link>
         </h3>
-        <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3 mb-3 !opacity-100">
+        <p className="text-[var(--muted-foreground)] text-base line-clamp-3">
           {summary}
         </p>
-        <div className="flex items-center">
-          <Link 
+        <div className="flex items-center gap-4 mt-2">
+          <Link
             href={`/news/${slug}`}
-            className="text-red-600 dark:text-yellow-400 hover:text-red-700 dark:hover:text-yellow-300 font-medium text-sm"
+            className="font-semibold text-[var(--secondary)] hover:text-[var(--secondary-hover)] transition-colors text-sm"
           >
             Read More →
           </Link>
@@ -70,7 +70,7 @@ export function NewsCard({
               href={externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-4 text-blue-600 dark:text-yellow-300 hover:underline text-sm font-medium"
+              className="font-semibold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors text-sm"
             >
               Read Original →
             </a>

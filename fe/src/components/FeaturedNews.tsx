@@ -10,7 +10,7 @@ export function FeaturedNews() {
       id: 1,
       title: "Revolutionary AI Technology Transforms Healthcare Industry",
       summary: "A breakthrough in artificial intelligence has led to unprecedented advances in medical diagnosis and treatment planning.",
-      imageUrl: "/api/placeholder/600/400",
+      imageUrl: "https://bsmedia.business-standard.com/_media/bs/img/article/2024-08/22/full/1724299850-5807.png?im=FitAndFill=(826,465)",
       category: "Technology",
       publishedAt: "2024-01-15",
       slug: "ai-healthcare-breakthrough"
@@ -19,7 +19,7 @@ export function FeaturedNews() {
       id: 2,
       title: "Global Leaders Unite for Climate Action Summit",
       summary: "World leaders gather in unprecedented numbers to address the urgent climate crisis and commit to ambitious targets.",
-      imageUrl: "/api/placeholder/600/400",
+      imageUrl: "https://media.vanityfair.com/photos/5dd5a1b940391c0009573a8f/1:1/w_1600%2Cc_limit/donaldtrumpsondland.jpg",
       category: "Politics",
       publishedAt: "2024-01-15",
       slug: "climate-summit-2024"

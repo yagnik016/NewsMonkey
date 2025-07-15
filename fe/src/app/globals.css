@@ -1,19 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --muted: #f3f4f6;
-  --muted-foreground: #6b7280;
-  --accent: #f59e42;
+  --background: #f7f9fb;
+  --foreground: #1a202c;
+  --card-bg: #fff;
+  --card-shadow: 0 4px 24px 0 rgba(30, 41, 59, 0.08);
+  --primary: #2346a0;
+  --primary-hover: #19316d;
+  --secondary: #ff7e29;
+  --secondary-hover: #e65c00;
+  --muted: #e2e8f0;
+  --muted-foreground: #64748b;
+  --border: #e5e7eb;
+  --radius: 18px;
+  --font-sans: 'Inter', 'Roboto', Arial, sans-serif;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --muted: #18181b;
+  --background: #10141a;
+  --foreground: #f7f9fb;
+  --card-bg: #181c23;
+  --card-shadow: 0 4px 24px 0 rgba(0,0,0,0.25);
+  --primary: #60a5fa;
+  --primary-hover: #2563eb;
+  --secondary: #fbbf24;
+  --secondary-hover: #f59e42;
+  --muted: #23272f;
   --muted-foreground: #a1a1aa;
-  --accent: #fbbf24;
+  --border: #23272f;
+  --radius: 18px;
+  --font-sans: 'Inter', 'Roboto', Arial, sans-serif;
 }
 
 @theme inline {
@@ -26,7 +42,8 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  transition: background 0.3s, color 0.3s;
 }
 
 @keyframes fadeIn {
