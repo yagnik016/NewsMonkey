@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { FaRegNewspaper, FaBusinessTime, FaFilm, FaHeartbeat, FaFlask, FaFutbol, FaLaptopCode, FaRegBookmark, FaBookmark, FaShareAlt, FaArrowUp } from "react-icons/fa";
 import { IconType } from "react-icons";
 import Image from "next/image";
+import ParallaxBg from '@/components/ParallaxBg';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TOPICS = [
   { label: "General", value: "general", color: "from-pink-500 to-yellow-500", icon: FaRegNewspaper },
@@ -45,7 +47,12 @@ export default function NewsPage() {
   const [showShare, setShowShare] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+    // Load bookmarks from localStorage
+    const stored = localStorage.getItem('newsmonkey_bookmarks');
+    if (stored) setBookmarks(JSON.parse(stored));
+  }, []);
 
   // Reset articles when topic changes
   useEffect(() => {
@@ -110,7 +117,11 @@ export default function NewsPage() {
 
   // Bookmark logic
   const toggleBookmark = (url: string) => {
-    setBookmarks((prev) => ({ ...prev, [url]: !prev[url] }));
+    setBookmarks((prev) => {
+      const updated = { ...prev, [url]: !prev[url] };
+      localStorage.setItem('newsmonkey_bookmarks', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   // Share logic
@@ -147,31 +158,44 @@ export default function NewsPage() {
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-8 font-sans min-h-screen relative">
+      <ParallaxBg />
       <AnimatedBg />
       {/* Vibrant animated navbar */}
       <nav className="sticky top-0 z-20 bg-black/80 backdrop-blur-md rounded-xl mb-8 flex items-center gap-2 py-3 px-2 shadow-lg animate-fade-in overflow-x-auto scrollbar-hide">
         {TOPICS.map((topic) => {
           const Icon = topic.icon as IconType;
+          const isSelected = selectedTopic === topic.value;
           return (
-            <button
+            <motion.button
               key={topic.value}
               onClick={() => setSelectedTopic(topic.value)}
-              className={`relative px-5 py-2 rounded-full font-semibold text-sm flex items-center gap-2 transition-all duration-300 focus:outline-none
-                bg-gradient-to-r ${topic.color}
-                ${selectedTopic === topic.value
-                  ? "shadow-xl scale-105 text-white ring-2 ring-white/70"
-                  : "opacity-70 hover:opacity-100 text-white/80"}
-              `}
+              className={`relative px-5 py-2 rounded-full font-semibold text-sm flex items-center gap-2 focus:outline-none bg-gradient-to-r ${topic.color}`}
               style={{
-                boxShadow: selectedTopic === topic.value ? "0 4px 24px 0 rgba(0,0,0,0.25)" : undefined,
+                boxShadow: isSelected ? "0 4px 24px 0 rgba(0,0,0,0.25)" : undefined,
+                opacity: isSelected ? 1 : 0.7,
+                color: isSelected ? '#fff' : 'rgba(255,255,255,0.8)',
+                transform: isSelected ? 'scale(1.08)' : 'scale(1)',
+                zIndex: isSelected ? 2 : 1,
               }}
+              whileHover={{ scale: 1.12, opacity: 1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
               <Icon className="text-lg animate-bounce-once" />
               {topic.label}
-              {selectedTopic === topic.value && (
-                <span className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2/3 h-1 bg-white/80 rounded-full animate-slide-in" />
-              )}
-            </button>
+              <AnimatePresence>
+                {isSelected && (
+                  <motion.span
+                    layoutId="category-highlight"
+                    className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-2/3 h-1 bg-white/80 rounded-full"
+                    initial={{ opacity: 0, scaleX: 0.5 }}
+                    animate={{ opacity: 1, scaleX: 1 }}
+                    exit={{ opacity: 0, scaleX: 0.5 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  />
+                )}
+              </AnimatePresence>
+            </motion.button>
           );
         })}
       </nav>
@@ -181,19 +205,29 @@ export default function NewsPage() {
         {loading && articles.length === 0
           ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
           : articles.map((article, idx) => (
-              <div
+              <motion.div
                 key={idx}
-                className="relative bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-xl shadow-xl p-0 flex flex-col h-full transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group animate-fade-up overflow-hidden"
-                style={{ animationDelay: mounted ? `${idx * 60}ms` : "0ms", animationFillMode: "both" }}
+                className="relative bg-gradient-to-br from-neutral-900/80 to-neutral-800/70 rounded-xl shadow-xl p-0 flex flex-col h-full group overflow-hidden backdrop-blur-md bg-white/10 border border-white/10"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.06, duration: 0.5, type: 'spring', stiffness: 60 }}
+                whileHover={{ scale: 1.045, boxShadow: '0 8px 32px 0 rgba(0,0,0,0.35)', rotateZ: 1.5 }}
+                whileTap={{ scale: 0.98, rotateZ: -1 }}
+                tabIndex={0}
+                aria-label={`News card: ${article.title}`}
               >
                 <div className="overflow-hidden rounded-t-xl relative">
                   <Image
                     src={article.urlToImage || "/placeholder.jpg"}
                     alt={article.title}
-                    width={600}
-                    height={300}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500 bg-neutral-700"
+                    width={400}
+                    height={250}
+                    className="w-full h-48 object-cover bg-gray-100 dark:bg-gray-800"
+                    unoptimized
+                    loading="lazy"
                   />
+                  {/* Gradient overlay for better text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none rounded-t-xl" />
                   {isNewArticle(article.publishedAt) && (
                     <span className="absolute top-2 left-2 bg-gradient-to-r from-yellow-400 to-pink-500 text-xs font-bold px-3 py-1 rounded-full text-white shadow animate-pulse">NEW</span>
                   )}
@@ -209,34 +243,50 @@ export default function NewsPage() {
                       href={article.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-fuchsia-400 hover:text-yellow-300 font-semibold transition-colors duration-300"
+                      className="text-purple-300 hover:text-yellow-300 font-semibold text-sm transition-colors"
+                      tabIndex={0}
+                      aria-label="Read original article"
                     >
                       Read Original
                     </a>
                     <button
-                      className="ml-auto text-xl text-yellow-400 hover:text-pink-400 transition-colors duration-200 focus:outline-none"
+                      className="ml-auto text-xl text-yellow-400 hover:text-yellow-300 transition-colors duration-200 focus:outline-none"
                       onClick={() => toggleBookmark(article.url)}
-                      aria-label="Bookmark"
+                      aria-label={bookmarks[article.url] ? "Remove bookmark" : "Add bookmark"}
+                      tabIndex={0}
                     >
-                      {bookmarks[article.url] ? <FaBookmark className="animate-bounce" /> : <FaRegBookmark />}
+                      <motion.span whileTap={{ scale: 1.3, rotate: -20 }} whileHover={{ scale: 1.15 }}>
+                        {bookmarks[article.url] ? <FaBookmark /> : <FaRegBookmark />}
+                      </motion.span>
                     </button>
                     <div className="relative">
-                      <button
-                        className="text-xl text-blue-400 hover:text-yellow-300 transition-colors duration-200 focus:outline-none"
-                        onClick={() => handleShare(article.url)}
-                        aria-label="Share"
-                      >
-                        <FaShareAlt />
-                      </button>
-                      {showShare === article.url && (
-                        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 text-white text-xs px-3 py-1 rounded shadow animate-fade-in">
-                          Link Copied!
-                        </span>
-                      )}
+                        <button
+                          onClick={() => handleShare(article.url)}
+                          className="ml-2 text-blue-400 hover:text-blue-600 transition-colors"
+                          aria-label="Share article"
+                          tabIndex={0}
+                        >
+                          <motion.span whileTap={{ scale: 1.3, rotate: 20 }} whileHover={{ scale: 1.15 }}>
+                            <FaShareAlt />
+                          </motion.span>
+                        </button>
+                        <AnimatePresence>
+                          {showShare === article.url && (
+                            <motion.span
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.3 }}
+                              className="absolute -top-7 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-xs px-2 py-1 rounded shadow-lg z-10"
+                            >
+                              Link Copied!
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
       </div>
       {loading && articles.length > 0 && (

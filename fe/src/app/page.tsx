@@ -8,6 +8,7 @@ import { CurrentAffairsSection } from '@/components/CurrentAffairsSection';
 import { LiveBlogsWidget } from '@/components/LiveBlogsWidget';
 import { LiveScoresWidget } from '@/components/LiveScoresWidget';
 import { fetchNewsApi } from '@/utils/fetchNewsApi';
+import ParallaxBg from '@/components/ParallaxBg';
 
 async function fetchCategories() {
   try {
@@ -46,7 +47,11 @@ export default async function HomePage() {
   const categoriesData = await fetchCategories();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-200 dark:from-gray-900 dark:via-gray-950 dark:to-gray-800 transition-colors duration-500">
+    <div className="min-h-screen relative transition-colors duration-500" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
+      <ParallaxBg />
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute w-[120vw] h-[120vw] left-1/2 top-0 -translate-x-1/2 bg-gradient-to-br from-fuchsia-700 via-indigo-900 to-yellow-500 opacity-30 blur-3xl animate-gradient-move" />
+      </div>
       {/* Header */}
       <header className="bg-white/80 dark:bg-gray-900/80 shadow-sm border-b backdrop-blur-md sticky top-0 z-50 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

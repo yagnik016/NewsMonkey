@@ -50,7 +50,7 @@ export default function LiveBlogDetailPage() {
                   <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString() : ''}</span>
                 </div>
                 <div className="text-gray-900 dark:text-gray-100 text-base mb-1">{entry.content}</div>
-                {entry.image && <Image src={entry.image} alt="entry" width={800} height={200} className="w-full h-48 object-cover rounded mt-2" />}
+                {entry.image && <Image src={entry.image} alt="entry" width={800} height={200} className="w-full h-48 object-cover rounded mt-2" unoptimized />}
                 {entry.author && <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">By {entry.author}</div>}
               </div>
             )) : <div className="text-gray-500 dark:text-gray-400">No entries yet.</div>}
