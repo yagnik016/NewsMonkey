@@ -42,13 +42,11 @@ export default function NewsPage() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState("");
-  const [mounted, setMounted] = useState(false);
   const [bookmarks, setBookmarks] = useState<{[url: string]: boolean}>({});
   const [showShare, setShowShare] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     // Load bookmarks from localStorage
     const stored = localStorage.getItem('newsmonkey_bookmarks');
     if (stored) setBookmarks(JSON.parse(stored));
