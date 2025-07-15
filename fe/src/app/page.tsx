@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { NewsCard } from '@/components/NewsCard';
-import { BreakingNews } from '@/components/BreakingNews';
 import { CategoryNav } from '@/components/CategoryNav';
 import { FeaturedNews } from '@/components/FeaturedNews';
 import { ThemeToggle } from '@/components/ThemeToggle';
