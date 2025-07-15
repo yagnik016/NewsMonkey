@@ -37,7 +37,7 @@ export default async function HomePage() {
   }[] = [];
   let newsError = false;
   try {
-    newsData = await fetchNewsApi({ country: 'us', category: 'general', page: 1, pageSize: 6 });
+    newsData = await fetchNewsApi({ country: 'us', page: 1, pageSize: 6 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Error fetching news:', error.message);

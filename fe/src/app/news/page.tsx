@@ -6,6 +6,7 @@ import { IconType } from "react-icons";
 import Image from "next/image";
 import ParallaxBg from '@/components/ParallaxBg';
 import { motion, AnimatePresence } from 'framer-motion';
+import { fetchNewsApi } from "@/utils/fetchNewsApi";
 
 const TOPICS = [
   { label: "General", value: "general", color: "from-pink-500 to-yellow-500", icon: FaRegNewspaper },
@@ -66,13 +67,9 @@ export default function NewsPage() {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(
-          `https://newsapi.org/v2/top-headlines?category=${selectedTopic}&page=${page}&pageSize=${PAGE_SIZE}&country=us&apiKey=${process.env.NEXT_PUBLIC_NEWSAPI_KEY}`
-        );
-        const data = await res.json();
-        if (data.status !== "ok") throw new Error(data.message || "Failed to fetch news");
-        setArticles((prev) => (page === 1 ? data.articles : [...prev, ...data.articles]));
-        setHasMore(data.articles.length === PAGE_SIZE);
+        const articles = await fetchNewsApi({ country: 'us', category: selectedTopic, page, pageSize: PAGE_SIZE });
+        setArticles((prev) => (page === 1 ? articles : [...prev, ...articles]));
+        setHasMore(articles.length === PAGE_SIZE);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load news");
         setHasMore(false);
