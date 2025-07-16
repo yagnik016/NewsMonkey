@@ -2,20 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from '../src/app.module';
 import express from 'express';
-import serverlessExpress from '@vendia/serverless-express';
 
-let server: any = null;
+const app = express();
+let isBootstrapped = false;
 
 async function bootstrap() {
-  const app = express();
   const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(app));
   await nestApp.init();
-  return serverlessExpress({ app });
 }
 
-export default async function handler(req: any, res: any) {
-  if (!server) {
-    server = await bootstrap();
+export default async function handler(req, res) {
+  if (!isBootstrapped) {
+    await bootstrap();
+    isBootstrapped = true;
   }
-  return server(req, res);
+  app(req, res);
 } 
