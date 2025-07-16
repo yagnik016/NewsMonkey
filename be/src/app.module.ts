@@ -13,7 +13,7 @@ import { LiveBlogsModule } from './modules/live-blogs/live-blogs.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/newsmonkey'),
+    MongooseModule.forRoot("mongodb+srv://yagnik016:9VEuaL6wkWUcnG94@cluster0.szvq3ka.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"),
     NewsModule,
     AuthModule,
     UsersModule,

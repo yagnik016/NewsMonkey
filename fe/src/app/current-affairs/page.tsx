@@ -13,7 +13,7 @@ export default function CurrentAffairsPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3001/api/v1/news?category=current-affairs&page=${page}&limit=9`)
+    fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}news?category=current-affairs&page=${page}&limit=9`)
       .then((res) => res.json())
       .then((data) => {
         setNews(page === 1 ? data : (prev) => [...prev, ...data]);

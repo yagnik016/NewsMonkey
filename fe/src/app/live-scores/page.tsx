@@ -10,7 +10,7 @@ export default function LiveScoresPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:3001/api/v1/live-scores")
+    fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}live-scores`)
       .then((res) => res.json())
       .then((data) => {
         setScores(Array.isArray(data) ? data : []);

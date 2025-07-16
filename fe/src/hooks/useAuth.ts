@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@/types';
 
-const API_URL = 'http://localhost:3001/api/v1';
+const API_URL = process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);

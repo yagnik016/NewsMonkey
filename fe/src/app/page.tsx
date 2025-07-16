@@ -8,7 +8,7 @@ import HomePageContent from './HomePageContent';
 
 async function fetchCategories() {
   try {
-    const res = await fetch('http://localhost:3001/api/v1/news/categories', { cache: 'no-store' });
+    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}news/categories`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch categories');
     return res.json();
   } catch (error: unknown) {

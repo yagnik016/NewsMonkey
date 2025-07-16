@@ -6,9 +6,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS
+  // Enable CORS for both localhost and Vercel frontend
   app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://newsmonkey-be.vercel.app',
+      'https://newsmonkey-jcief3r1a-yagnik-vadaliyas-projects.vercel.app',
+      'https://news-monkey-murex-one.vercel.app',
+      // Add your actual frontend domain here for production
+    ],
     credentials: true,
   });
 

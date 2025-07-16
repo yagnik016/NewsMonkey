@@ -13,7 +13,7 @@ export default function LiveBlogDetailPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3001/api/v1/live-blogs/${id}`)
+    fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}live-blogs/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setBlog(data);
