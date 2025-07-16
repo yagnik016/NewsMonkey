@@ -47,6 +47,9 @@ export class News {
   @Prop({ default: false })
   isLiveBlog: boolean;
 
+  @Prop({ default: false })
+  isPremium: boolean;
+
   @Prop({ default: 'local' })
   source: string;
 

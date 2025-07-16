@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { News, NewsDocument } from './schemas/news.schema';
 import { Category, CategoryDocument } from './schemas/category.schema';
-import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class NewsApiImportService {
@@ -62,15 +61,5 @@ export class NewsApiImportService {
     }
     this.logger.log(`Imported ${imported} articles from NewsAPI (${category})`);
     return imported;
-  }
-
-  // Cron job: import every 30 minutes for 'general', 'sports', 'technology', 'business'
-  @Cron(CronExpression.EVERY_30_MINUTES)
-  async scheduledImport() {
-    const categories = ['general', 'sports', 'technology', 'business'];
-    for (const cat of categories) {
-      await this.importTopHeadlines('us', cat);
-    }
-    this.logger.log('Scheduled NewsAPI import completed.');
   }
 } 

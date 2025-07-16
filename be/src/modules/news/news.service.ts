@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types, isValidObjectId } from 'mongoose';
+import { Model, Types, isValidObjectId, PipelineStage } from 'mongoose';
 import { News, NewsDocument } from './schemas/news.schema';
 import { Category, CategoryDocument } from './schemas/category.schema';
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -214,5 +214,20 @@ export class NewsService {
       totalViews: totalViews[0]?.totalViews || 0,
       popularNews,
     };
+  }
+
+  async getTrendingTags(limit = 10): Promise<{ tag: string, count: number }[]> {
+    // Aggregate tags from news published in the last 7 days
+    const since = new Date();
+    since.setDate(since.getDate() - 7);
+    const pipeline: PipelineStage[] = [
+      { $match: { status: 'published', publishedAt: { $gte: since } } },
+      { $unwind: '$tags' },
+      { $group: { _id: '$tags', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: limit },
+      { $project: { tag: '$_id', count: 1, _id: 0 } }
+    ];
+    return this.newsModel.aggregate(pipeline).exec();
   }
 } 

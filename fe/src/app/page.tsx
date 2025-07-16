@@ -1,13 +1,10 @@
 import Link from 'next/link';
-import { NewsCard } from '@/components/NewsCard';
-import { CategoryNav } from '@/components/CategoryNav';
 import { FeaturedNews } from '@/components/FeaturedNews';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { CurrentAffairsSection } from '@/components/CurrentAffairsSection';
-import { LiveBlogsWidget } from '@/components/LiveBlogsWidget';
-import { LiveScoresWidget } from '@/components/LiveScoresWidget';
 import { fetchNewsApi } from '@/utils/fetchNewsApi';
 import ParallaxBg from '@/components/ParallaxBg';
+import UserMenu from '@/components/UserMenu';
+import HomePageContent from './HomePageContent';
 
 async function fetchCategories() {
   try {
@@ -24,16 +21,8 @@ async function fetchCategories() {
 }
 
 export default async function HomePage() {
-  let newsData: {
-    url: string;
-    title: string;
-    description: string;
-    source?: {
-      name: string;
-    };
-    publishedAt: string;
-    urlToImage?: string;
-  }[] = [];
+  const categoriesData = await fetchCategories();
+  let newsData: never[] = [];
   let newsError = false;
   try {
     newsData = await fetchNewsApi({ country: 'us', page: 1, pageSize: 6 });
@@ -43,8 +32,6 @@ export default async function HomePage() {
       newsError = true;
     }
   }
-  const categoriesData = await fetchCategories();
-
   return (
     <div className="min-h-screen relative transition-colors duration-500 bg-[var(--background)]">
       <ParallaxBg />
@@ -67,6 +54,7 @@ export default async function HomePage() {
             </nav>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
+              <UserMenu />
               <button className="bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] text-white px-4 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform font-semibold">
                 Subscribe
               </button>
@@ -87,48 +75,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Category Navigation */}
-        <CategoryNav categories={categoriesData?.error ? [] : categoriesData} />
-        <CurrentAffairsSection />
-        <LiveBlogsWidget />
-        <LiveScoresWidget />
-
-        {/* Latest News Grid */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-extrabold text-[var(--foreground)] mb-8 mt-12">Latest News</h2>
-          {newsError ? (
-            <div className="text-[var(--secondary)] text-center mb-4 font-semibold">Failed to load news. Please try again later.</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {newsData?.length > 0 ? newsData.map((item: {
-                url: string;
-                title: string;
-                description: string;
-                source?: {
-                  name: string;
-                };
-                publishedAt: string;
-                urlToImage?: string;
-              }) => (
-                <NewsCard
-                  key={item.url}
-                  title={item.title}
-                  summary={item.description}
-                  category={item.source?.name || 'General'}
-                  publishedAt={item.publishedAt}
-                  imageUrl={item.urlToImage || '/api/placeholder/400/250'}
-                  isBreaking={false}
-                  slug={encodeURIComponent(item.title)}
-                  source={'newsapi'}
-                  externalUrl={item.url}
-                />
-              )) : <div className="col-span-full text-[var(--muted-foreground)] text-lg">No news found.</div>}
-            </div>
-          )}
-        </section>
-      </main>
+      <HomePageContent categoriesData={categoriesData} newsData={newsData} newsError={newsError} />
 
       {/* Footer */}
       <footer className="bg-[var(--card-bg)]/95 text-[var(--muted-foreground)] py-12 mt-16 shadow-inner backdrop-blur-md border-t border-[var(--border)]">
@@ -167,7 +114,7 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="border-t border-[var(--border)] mt-8 pt-8 text-center">
-            <p>&copy; 2024 NewsMonkey. All rights reserved.</p>
+            <p>&copy; 2025 Yagnik Vadaliya. All rights reserved.</p>
           </div>
         </div>
       </footer>

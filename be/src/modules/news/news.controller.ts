@@ -89,6 +89,11 @@ export class NewsController {
     return this.newsService.getLiveBlogs();
   }
 
+  @Get('trending-tags')
+  async getTrendingTags(@Query('limit') limit?: string) {
+    return this.newsService.getTrendingTags(limit ? parseInt(limit) : 10);
+  }
+
   @Get('search')
   @ApiOperation({ summary: 'Search news articles' })
   @ApiQuery({ name: 'q', required: true, type: String })

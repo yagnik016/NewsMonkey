@@ -40,9 +40,9 @@ export function LiveBlogsWidget() {
       ) : blogs.length === 0 ? (
         <div className="text-gray-500 dark:text-gray-400">No live blogs at the moment.</div>
       ) : (
-        <div className="flex gap-6 overflow-x-auto pb-2 snap-x animate-marquee">
-          {blogs.map((blog) => (
-            <div key={blog._id} className="snap-center min-w-[280px] max-w-xs bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 flex flex-col justify-between border-l-4 border-pink-500 dark:border-pink-300 transition-transform hover:scale-105">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blogs.slice(0, 3).map((blog) => (
+            <div key={blog._id} className="min-w-[280px] max-w-xs bg-white dark:bg-gray-900 rounded-lg shadow-lg p-4 flex flex-col justify-between border-l-4 border-pink-500 dark:border-pink-300 transition-transform hover:scale-105">
               <div className="flex items-center mb-2">
                 <span className="w-2 h-2 bg-pink-500 dark:bg-pink-300 rounded-full animate-pulse mr-2"></span>
                 <span className="text-pink-600 dark:text-pink-300 font-semibold text-xs uppercase tracking-wider">LIVE</span>

@@ -36,4 +36,13 @@ export interface Score {
   currentInning?: string;
   lastUpdate?: string;
   events?: Array<{ over?: number; timestamp?: string; desc: string }>;
+}
+
+export interface User {
+  _id: string;
+  email: string;
+  name: string;
+  interests: string[];
+  token?: string;
+  isSubscriber?: boolean;
 } 

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 
 interface NewsCardProps {
   title: string;
@@ -24,6 +26,23 @@ export function NewsCard({
   source,
   externalUrl
 }: NewsCardProps) {
+  const [bookmarked, setBookmarked] = useState(false);
+  useEffect(() => {
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+    setBookmarked(bookmarks.some((b: {slug: string}) => b.slug === slug));
+  }, [slug]);
+  const handleBookmark = () => {
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+    if (bookmarked) {
+      const updated = bookmarks.filter((b: {slug: string}) => b.slug === slug);
+      localStorage.setItem('bookmarks', JSON.stringify(updated));
+      setBookmarked(false);
+    } else {
+      const updated = [...bookmarks, { title, summary, category, publishedAt, imageUrl, slug, source, externalUrl }];
+      localStorage.setItem('bookmarks', JSON.stringify(updated));
+      setBookmarked(true);
+    }
+  };
   return (
     <div
       className="rounded-2xl shadow-xl overflow-hidden bg-[var(--card-bg)] hover:shadow-2xl transition-all duration-300 group border border-[var(--border)]"
@@ -51,6 +70,14 @@ export function NewsCard({
           <span>{new Date(publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
           <span>•</span>
           <span>{category}</span>
+          <button
+            onClick={handleBookmark}
+            className="ml-auto p-1 rounded-full hover:bg-[var(--muted)] transition"
+            title={bookmarked ? 'Remove bookmark' : 'Save for later'}
+            aria-label={bookmarked ? 'Remove bookmark' : 'Save for later'}
+          >
+            {bookmarked ? <FaBookmark className="text-pink-500" /> : <FaRegBookmark className="text-gray-400" />}
+          </button>
         </div>
         <h3 className="text-xl font-extrabold text-[var(--foreground)] leading-tight group-hover:text-[var(--primary)] transition-colors line-clamp-2">
           <Link href={`/news/${slug}`}>{title}</Link>
