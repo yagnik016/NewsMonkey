@@ -32,7 +32,7 @@ function GamingWidget() {
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                 <h3 className="font-semibold text-white text-lg mb-2">GTA VI Trailer</h3>
-                <p className="text-white/80 text-sm">Rockstar's biggest release yet!</p>
+                <p className="text-white/80 text-sm">Rockstars biggest release yet!</p>
               </div>
             </div>
             <div className="flex items-center justify-center">

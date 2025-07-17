@@ -25,7 +25,7 @@ export default function NewsletterSignup() {
             <h3 className="text-2xl font-bold text-white">Thank You!</h3>
           </div>
           <p className="text-white/90 text-lg">
-            You've been successfully subscribed to our newsletter. Check your email for exclusive updates!
+            You have been successfully subscribed to our newsletter. Check your email for exclusive updates!
           </p>
         </div>
       </div>
