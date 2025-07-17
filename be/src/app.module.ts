@@ -6,6 +6,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { LiveScoresModule } from './modules/live-scores/live-scores.module';
 import { LiveBlogsModule } from './modules/live-blogs/live-blogs.module';
+import { GamingModule } from './modules/gaming/gaming.module';
+import { FinanceModule } from './modules/finance/finance.module';
+import { PollsModule } from './modules/polls/polls.module';
+import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
 
 @Module({
   imports: [
@@ -19,6 +23,10 @@ import { LiveBlogsModule } from './modules/live-blogs/live-blogs.module';
     UsersModule,
     LiveScoresModule,
     LiveBlogsModule,
+    GamingModule,
+    FinanceModule,
+    PollsModule,
+    LeaderboardModule,
   ],
   controllers: [],
   providers: [],

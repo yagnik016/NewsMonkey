@@ -8,6 +8,13 @@ let isBootstrapped = false;
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(app));
+  
+  // Enable CORS for all origins
+  nestApp.enableCors({
+    origin: '*',
+    credentials: true,
+  });
+  
   await nestApp.init();
 }
 

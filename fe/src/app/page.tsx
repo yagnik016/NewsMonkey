@@ -48,6 +48,12 @@ export default async function HomePage() {
             <nav className="hidden md:flex space-x-8">
               <Link href="/" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Home</Link>
               <Link href="/news" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">News</Link>
+              <Link href="/gaming" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Gaming</Link>
+              <Link href="/finance" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Finance</Link>
+              <Link href="/polls" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Polls</Link>
+              <Link href="/videos" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Videos</Link>
+              <Link href="/podcasts" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Podcasts</Link>
+              <Link href="/leaderboard" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Leaderboard</Link>
               <Link href="/live-blogs" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Live Blogs</Link>
               <Link href="/live-scores" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Live Scores</Link>
               <Link href="/about" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">About</Link>
@@ -97,6 +103,12 @@ export default async function HomePage() {
             <div>
               <h4 className="font-semibold mb-4 text-[var(--foreground)]">Features</h4>
               <ul className="space-y-2">
+                <li><Link href="/gaming" className="hover:text-[var(--primary)]">Gaming</Link></li>
+                <li><Link href="/finance" className="hover:text-[var(--primary)]">Finance</Link></li>
+                <li><Link href="/polls" className="hover:text-[var(--primary)]">Polls</Link></li>
+                <li><Link href="/videos" className="hover:text-[var(--primary)]">Videos</Link></li>
+                <li><Link href="/podcasts" className="hover:text-[var(--primary)]">Podcasts</Link></li>
+                <li><Link href="/leaderboard" className="hover:text-[var(--primary)]">Leaderboard</Link></li>
                 <li><Link href="/live-blogs" className="hover:text-[var(--primary)]">Live Blogs</Link></li>
                 <li><Link href="/live-scores" className="hover:text-[var(--primary)]">Live Scores</Link></li>
                 <li><Link href="/breaking-news" className="hover:text-[var(--primary)]">Breaking News</Link></li>
