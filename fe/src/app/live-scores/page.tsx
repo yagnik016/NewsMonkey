@@ -3,7 +3,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function LiveScoresPage() {
-  const [cricket, setCricket] = useState<any[]>([]);
+  interface CricketScore {
+    guid?: string;
+    title: string;
+    contentSnippet?: string;
+    content?: string;
+    summary?: string;
+    link: string;
+  }
+
+  const [cricket, setCricket] = useState<CricketScore[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -40,7 +49,7 @@ export default function LiveScoresPage() {
         <div className="text-gray-500 dark:text-gray-400">No live cricket matches at the moment.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {cricket.map((item: any, idx: number) => (
+          {cricket.map((item: CricketScore, idx: number) => (
             <div
               key={item.guid || idx}
               className="bg-gradient-to-br from-pink-500/80 via-purple-700/80 to-indigo-700/80 dark:from-pink-700/80 dark:via-purple-900/80 dark:to-indigo-900/80 rounded-lg shadow-2xl p-6 flex flex-col justify-between border-l-4 border-pink-400 dark:border-pink-300 relative overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-pink-400/40 animate-fadeIn"

@@ -1,14 +1,20 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import type { Score } from '@/types';
 import { API_BASE_URL } from '@/utils/apiConfig';
 
+// Local type for ESPN cricket scores
+interface CricketScore {
+  guid?: string;
+  title: string;
+  contentSnippet?: string;
+  content?: string;
+  summary?: string;
+  link: string;
+}
+
 export function LiveScoresWidget() {
-  const [scores, setScores] = useState<Score[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [cricket, setCricket] = useState<any[]>([]);
+  const [cricket, setCricket] = useState<CricketScore[]>([]);
   const [cricketLoading, setCricketLoading] = useState(true);
   const [tab, setTab] = useState<'all' | 'cricket'>('all');
   const cricketScrollRef = useRef<HTMLDivElement>(null);
@@ -141,7 +147,7 @@ export function LiveScoresWidget() {
           <div className="text-gray-500 dark:text-gray-400">No live cricket matches at the moment.</div>
         ) : (
           <div ref={cricketScrollRef} className="flex gap-8 overflow-x-auto pb-4 snap-x no-scrollbar scroll-smooth relative z-10">
-            {cricket.map((item: any, idx: number) => (
+            {cricket.map((item: CricketScore, idx: number) => (
               <div
                 key={item.guid || idx}
                 className="snap-center min-w-[320px] sm:min-w-[360px] max-w-lg bg-gradient-to-br from-pink-500/80 via-purple-700/80 to-indigo-700/80 dark:from-pink-700/80 dark:via-purple-900/80 dark:to-indigo-900/80 rounded-3xl shadow-2xl p-6 flex flex-col justify-between border-l-4 border-pink-400 dark:border-pink-300 relative overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-pink-400/40 animate-fadeIn"
