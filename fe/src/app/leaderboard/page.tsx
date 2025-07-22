@@ -1,8 +1,9 @@
 import React from 'react';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 async function fetchLeaderboardData() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}leaderboard`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}leaderboard`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch leaderboard data');
     return res.json();
   } catch (error: unknown) {
@@ -16,7 +17,7 @@ async function fetchLeaderboardData() {
 
 async function fetchLeaderboardStats() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}leaderboard/stats`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}leaderboard/stats`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch leaderboard stats');
     return res.json();
   } catch (error: unknown) {

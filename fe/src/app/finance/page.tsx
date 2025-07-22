@@ -1,8 +1,9 @@
 import React from 'react';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 async function fetchFinanceData() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}finance`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}finance`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch finance data');
     return res.json();
   } catch (error: unknown) {
@@ -16,7 +17,7 @@ async function fetchFinanceData() {
 
 async function fetchMarketSummary() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}finance/market-summary`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}finance/market-summary`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch market summary');
     return res.json();
   } catch (error: unknown) {

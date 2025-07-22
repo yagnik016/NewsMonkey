@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 interface Poll {
   _id: string;
@@ -14,7 +15,7 @@ interface Poll {
 
 async function fetchPollsData() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}polls`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}polls`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch polls data');
     return res.json();
   } catch (error: unknown) {
@@ -28,7 +29,7 @@ async function fetchPollsData() {
 
 async function fetchDailyPoll() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}polls/daily`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}polls/daily`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch daily poll');
     return res.json();
   } catch (error: unknown) {
@@ -64,7 +65,7 @@ export default function PollsPage() {
     if (votedPolls.has(pollId)) return;
 
     try {
-      const response = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}polls/${pollId}/vote`, {
+      const response = await fetch(`${API_BASE_URL}polls/${pollId}/vote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

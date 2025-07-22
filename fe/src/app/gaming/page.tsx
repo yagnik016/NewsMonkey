@@ -1,8 +1,9 @@
 import React from 'react';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 async function fetchGamingData() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}gaming`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}gaming`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch gaming data');
     return res.json();
   } catch (error: unknown) {
@@ -16,7 +17,7 @@ async function fetchGamingData() {
 
 async function fetchFeaturedGaming() {
   try {
-    const res = await fetch(`${process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/'}gaming/featured`, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE_URL}gaming/featured`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to fetch featured gaming data');
     return res.json();
   } catch (error: unknown) {

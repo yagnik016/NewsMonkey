@@ -19,4 +19,19 @@ export class LiveScoresController {
   findOne(@Param('id') id: string) {
     return this.liveScoresService.getLiveScoreById(id);
   }
+
+  @Get('cricket/live')
+  getCricAPILiveMatches() {
+    return this.liveScoresService.getCricAPILiveMatches();
+  }
+
+  @Get('cricket/score/:uniqueId')
+  getCricAPIMatchScore(@Param('uniqueId') uniqueId: string) {
+    return this.liveScoresService.getCricAPIMatchScore(uniqueId);
+  }
+
+  @Get('espn/live')
+  getEspnLiveScores() {
+    return this.liveScoresService.getEspnLiveScores();
+  }
 } 
