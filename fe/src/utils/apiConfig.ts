@@ -1,6 +1,6 @@
 // fe/src/utils/apiConfig.ts
 // Set to 'local' or 'live' to switch environments
-const MODE: 'local' | 'live' = 'local';
+const MODE: 'local' | 'live' = 'live';
 
 const URLS = {
   local: 'http://localhost:3005/api/v1/', // local backend API with prefix
