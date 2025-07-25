@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import type { Blog } from '@/types';
 import { API_BASE_URL } from '@/utils/apiConfig';
+import { motion } from 'framer-motion';
+import Tilt from 'react-parallax-tilt';
 
 export function LiveBlogsWidget() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -58,9 +60,6 @@ export function LiveBlogsWidget() {
         <Link href="/live-blogs" className="ml-auto text-pink-600 dark:text-pink-300 hover:underline font-medium text-sm">See all</Link>
       </div>
       <div className="relative">
-        {/* Fade gradients for scroll hint */}
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-10 z-10" style={{background: 'linear-gradient(to right, rgba(236,72,153,0.85) 70%, transparent)'}} />
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-10 z-10" style={{background: 'linear-gradient(to left, rgba(236,72,153,0.85) 70%, transparent)'}} />
         {/* Modern scroll arrows */}
         {canScrollLeft && (
           <button
@@ -121,20 +120,51 @@ export function LiveBlogsWidget() {
         ) : (
           <div ref={scrollRef} className="flex gap-8 overflow-x-auto pb-4 snap-x no-scrollbar scroll-smooth">
             {blogs.slice(0, 6).map((blog, idx) => (
-              <div
-                key={blog._id}
-                className="snap-center min-w-[320px] max-w-xs bg-gradient-to-br from-pink-500/80 via-purple-700/80 to-indigo-700/80 dark:from-pink-700/80 dark:via-purple-900/80 dark:to-indigo-900/80 rounded-3xl shadow-2xl p-6 flex flex-col justify-between border-l-4 border-pink-400 dark:border-pink-300 relative overflow-hidden group transition-transform duration-300 hover:scale-105 animate-fadeIn"
-                style={{ animationDelay: `${idx * 80}ms` }}
+              <Tilt key={blog._id || idx}
+                glareEnable={true}
+                glareMaxOpacity={0.35}
+                glareColor="#ec4899"
+                glarePosition="all"
+                tiltMaxAngleX={18}
+                tiltMaxAngleY={18}
+                scale={1.04}
+                transitionSpeed={1800}
+                className="neon-tilt"
               >
-                <div className="flex items-center mb-2">
-                  <span className="w-2 h-2 bg-pink-300 dark:bg-pink-200 rounded-full animate-pulse mr-2"></span>
-                  <span className="text-pink-100 dark:text-pink-200 font-semibold text-xs uppercase tracking-wider">LIVE</span>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1 truncate group-hover:underline transition-all duration-200">{blog.title}</h3>
-                <p className="text-white/80 text-sm truncate mb-2">{blog.description}</p>
-                <Link href={`/live-blogs/${blog._id}`} className="text-pink-200 hover:text-white hover:underline text-xs font-medium transition-all duration-200">Follow Updates →</Link>
-                <div className="absolute top-0 right-0 m-3 w-8 h-8 bg-pink-400/20 rounded-full blur-2xl animate-pulse" />
-              </div>
+                <motion.div
+                  key={blog._id}
+                  className="snap-center min-w-[320px] max-w-xs bg-white dark:bg-slate-900/30 border border-gray-200 dark:border-cyan-300 rounded-3xl shadow p-6 flex flex-col justify-between relative overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-md dark:hover:shadow-cyan-400/40 animate-fadeIn"
+                  style={{ animationDelay: `${idx * 80}ms` }}
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  whileHover={{ scale: 1.03, boxShadow: '0 2px 8px 0 #e5e7eb' }}
+                  transition={{ type: 'spring', stiffness: 180, damping: 18, delay: idx * 0.08 }}
+                >
+                  <div className="flex items-center mb-2">
+                    <span className="mr-2 flex items-center justify-center" style={{ width: 24, height: 24, position: 'relative' }}>
+                      <span
+                        className="block w-6 h-6 rounded-full bg-cyan-400 border-2 border-blue-500 shadow-lg"
+                        style={{
+                          boxShadow: '0 0 16px 6px #38bdf8, 0 0 32px 12px #2563eb99',
+                          animation: 'spin-slow 2.5s linear infinite, pulse-glow-blue 1.2s infinite'
+                        }}
+                      />
+                      <span className="absolute left-1 top-1 w-2 h-2 bg-white rounded-full" />
+                    </span>
+                    <span
+                      className="text-black dark:text-cyan-300 font-semibold text-xs uppercase tracking-wider ml-1"
+                      style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'none' }}
+                    >
+                      LIVE
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-1 truncate group-hover:underline transition-all duration-200 drop-shadow-lg neon-text">{blog.title}</h3>
+                  <p className="text-white/80 text-sm truncate mb-2">{blog.description}</p>
+                  <Link href={`/live-blogs/${blog._id}`} className="relative bg-black text-white dark:bg-gradient-to-r dark:from-blue-600 dark:via-cyan-400 dark:to-blue-600 dark:hover:from-blue-700 dark:hover:to-blue-700 rounded-full font-semibold shadow transition-all text-xs font-medium text-center shimmer-btn-glass px-4 py-2 mt-2">Follow Updates →</Link>
+                  <div className="absolute top-0 right-0 m-3 w-8 h-8 bg-gray-200 dark:bg-gradient-to-br dark:from-blue-400/60 dark:to-cyan-400/40 rounded-full blur-2xl animate-pulse-glow" />
+                  <div className="absolute inset-0 pointer-events-none z-0 bg-transparent dark:animated-gradient-bg-blue" />
+                </motion.div>
+              </Tilt>
             ))}
           </div>
         )}
@@ -149,6 +179,62 @@ export function LiveBlogsWidget() {
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(236,72,153,0.4); }
+          50% { box-shadow: 0 0 16px 6px rgba(236,72,153,0.7); }
+        }
+        .animate-pulse-glow {
+          animation: pulse-glow 1.2s infinite;
+        }
+        .shimmer-btn-glass::after {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+          opacity: 0.7;
+          transform: translateX(-100%);
+          transition: none;
+          pointer-events: none;
+        }
+        .shimmer-btn-glass:hover::after {
+          animation: shimmer 1.2s linear forwards;
+        }
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .neon-tilt {
+          filter: drop-shadow(0 0 16px #ec4899cc) drop-shadow(0 0 32px #a21caf99);
+        }
+        .neon-border {
+          border-image: linear-gradient(120deg, #ec4899 0%, #a21caf 100%) 1;
+          box-shadow: 0 0 24px 2px #ec4899cc, 0 0 48px 8px #a21caf55;
+        }
+        .neon-text {
+          text-shadow: 0 0 8px #ec4899cc, 0 0 16px #a21caf99;
+        }
+        .animated-gradient-bg {
+          background: linear-gradient(120deg, #ec4899 0%, #a21caf 100%);
+          opacity: 0.13;
+          animation: gradientMove 4s linear infinite alternate;
+        }
+        @keyframes gradientMove {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        .neon-border-blue {
+          border-image: linear-gradient(120deg, #bae6fd 0%, #38bdf8 100%) 1;
+          box-shadow: 0 0 24px 2px #bae6fdcc, 0 0 48px 8px #38bdf855;
+        }
+        .animated-gradient-bg-blue {
+          background: linear-gradient(120deg, #bae6fd 0%, #a5f3fc 100%);
+          opacity: 0.13;
+          animation: gradientMove 4s linear infinite alternate;
+        }
+        @keyframes pulse-glow-blue {
+          0%, 100% { box-shadow: 0 0 0 0 #38bdf8; }
+          50% { box-shadow: 0 0 16px 6px #38bdf8, 0 0 32px 12px #2563eb99; }
+        }
       `}</style>
     </section>
   );

@@ -12,6 +12,7 @@ import LiveMediaWidget from '@/components/LiveMediaWidget';
 import StockWeatherWidget from '@/components/StockWeatherWidget';
 import Link from 'next/link';
 import React from 'react';
+import ScrollReveal from '@/components/ScrollReveal';
 
 // Premium Feature Placeholders with Enhanced Design
 function GamingWidget() {
@@ -221,28 +222,26 @@ export default function HomePageContent({ categoriesData, newsData, newsError }:
         <h2 className="text-3xl font-bold text-center mb-8 text-white">
           <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Premium Features</span>
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <GamingWidget />
-          <FinanceWidget />
-          <PollOfTheDay />
-          <VideoHighlights />
-          <Podcasts />
-          <Leaderboard />
-        </div>
+        <ScrollReveal effect="slide-right">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <GamingWidget />
+            <FinanceWidget />
+            <PollOfTheDay />
+            <VideoHighlights />
+            <Podcasts />
+            <Leaderboard />
+          </div>
+        </ScrollReveal>
       </section>
 
       {/* Newsletter & Live Widgets Section */}
       <section className="mb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-8">
-            {!isPremium && <AdBanner />}
-            <NewsletterSignup />
+        <ScrollReveal effect="scale-fade">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-8">{!isPremium && <AdBanner />}<NewsletterSignup /></div>
+            <div className="space-y-8"><LiveMediaWidget /><StockWeatherWidget /></div>
           </div>
-          <div className="space-y-8">
-            <LiveMediaWidget />
-            <StockWeatherWidget />
-          </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* Category Navigation */}
@@ -275,38 +274,40 @@ export default function HomePageContent({ categoriesData, newsData, newsError }:
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsData?.length > 0 ? (newsData as Array<{
-              url: string;
-              title: string; 
-              description: string;
-              source?: {
-                name: string;
-              };
-              publishedAt: string;
-              urlToImage?: string;
-            }>).map((item) => (
-              <NewsCard
-                key={item.url}
-                title={item.title}
-                summary={item.description}
-                category={item.source?.name || 'General'}
-                publishedAt={item.publishedAt}
-                imageUrl={item.urlToImage || '/api/placeholder/400/250'}
-                isBreaking={false}
-                slug={encodeURIComponent(item.title)}
-                source={'newsapi'}
-                externalUrl={item.url}
-              />
-            )) : (
-              <div className="col-span-full text-center py-12">
-                <div className="bg-gray-500/10 border border-gray-500/20 rounded-2xl p-8">
-                  <div className="text-6xl mb-4">📰</div>
-                  <p className="text-gray-400 text-lg">No news found</p>
+          <ScrollReveal effect="rotate-fade">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {newsData?.length > 0 ? (newsData as Array<{
+                url: string;
+                title: string; 
+                description: string;
+                source?: {
+                  name: string;
+                };
+                publishedAt: string;
+                urlToImage?: string;
+              }>).map((item) => (
+                <NewsCard
+                  key={item.url}
+                  title={item.title}
+                  summary={item.description}
+                  category={item.source?.name || 'General'}
+                  publishedAt={item.publishedAt}
+                  imageUrl={item.urlToImage || '/api/placeholder/400/250'}
+                  isBreaking={false}
+                  slug={encodeURIComponent(item.title)}
+                  source={'newsapi'}
+                  externalUrl={item.url}
+                />
+              )) : (
+                <div className="col-span-full text-center py-12">
+                  <div className="bg-gray-500/10 border border-gray-500/20 rounded-2xl p-8">
+                    <div className="text-6xl mb-4">📰</div>
+                    <p className="text-gray-400 text-lg">No news found</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </ScrollReveal>
         )}
       </section>
     </main>

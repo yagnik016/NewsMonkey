@@ -4,9 +4,9 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Blog, BlogEntry } from '@/types';
 import Image from 'next/image';
-
 export default function LiveBlogDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id;
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

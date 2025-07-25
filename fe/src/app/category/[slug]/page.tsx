@@ -6,7 +6,8 @@ import Link from "next/link";
 import type { News } from '@/types';
 
 export default function CategoryPage() {
-  const { slug } = useParams();
+  const params = useParams();
+  const slug = params?.slug;
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

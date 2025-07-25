@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import type { Score } from '@/types';
-
 export default function LiveScoreDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id;
   const [score, setScore] = useState<Score | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

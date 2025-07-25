@@ -39,31 +39,59 @@ export default async function HomePage() {
         <div className="absolute w-[120vw] h-[120vw] left-1/2 top-0 -translate-x-1/2 bg-gradient-to-br from-fuchsia-700 via-indigo-900 to-yellow-500 opacity-30 blur-3xl animate-gradient-move" />
       </div>
       {/* Header */}
-      <header className="bg-[var(--card-bg)]/90 shadow-sm border-b border-[var(--border)] backdrop-blur-md sticky top-0 z-50 transition-colors">
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-[var(--card-bg)]/90 backdrop-blur-lg shadow-lg rounded-b-2xl border-b border-gray-200 dark:border-[var(--border)] transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <h1 className="text-3xl font-extrabold text-[var(--primary)] tracking-tight">NewsMonkey</h1>
+          <div className="flex items-center justify-between py-4 gap-4">
+            {/* Logo/Brand */}
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">NewsMonkey</h1>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link href="/" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Home</Link>
-              <Link href="/news" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">News</Link>
-              <Link href="/gaming" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Gaming</Link>
-              <Link href="/finance" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Finance</Link>
-              <Link href="/polls" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Polls</Link>
-              <Link href="/videos" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Videos</Link>
-              <Link href="/podcasts" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Podcasts</Link>
-              <Link href="/leaderboard" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Leaderboard</Link>
-              <Link href="/live-blogs" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Live Blogs</Link>
-              <Link href="/live-scores" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">Live Scores</Link>
-              <Link href="/about" className="text-[var(--foreground)] hover:text-[var(--primary)] font-medium transition-colors">About</Link>
+            {/* Centered Nav Links (hidden on mobile) */}
+            <nav className="hidden md:flex flex-1 justify-center gap-4 overflow-x-auto scrollbar-none">
+              {[
+                { href: '/', label: 'Home' },
+                { href: '/news', label: 'News' },
+                { href: '/gaming', label: 'Gaming' },
+                { href: '/finance', label: 'Finance' },
+                { href: '/polls', label: 'Polls' },
+                { href: '/videos', label: 'Videos' },
+                { href: '/podcasts', label: 'Podcasts' },
+                { href: '/leaderboard', label: 'Leaderboard' },
+                { href: '/live-blogs', label: 'Live Blogs' },
+                { href: '/live-scores', label: 'Live Scores' },
+                { href: '/about', label: 'About' },
+              ].map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="relative px-3 py-1 font-medium text-gray-700 dark:text-[var(--foreground)] transition-colors duration-200 hover:text-blue-600 dark:hover:text-cyan-400 group whitespace-nowrap"
+                >
+                  <span className="pb-0.5 border-b-2 border-transparent group-hover:border-blue-600 dark:group-hover:border-cyan-400 transition-all duration-200">
+                    {link.label}
+                  </span>
+                  {/* Active link indicator (for demo, Home is active) */}
+                  {link.href === '/' && (
+                    <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full" />
+                  )}
+                </Link>
+              ))}
             </nav>
-            <div className="flex items-center space-x-4">
+            {/* Actions (right) */}
+            <div className="flex items-center gap-3">
               <ThemeToggle />
+              <div className="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2" />
               <UserMenu />
-              <button className="bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] text-white px-4 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform font-semibold">
+              <button className="hidden md:inline-block bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-6 py-2 rounded-full shadow-lg hover:scale-105 transition-transform font-semibold ml-2">
                 Subscribe
               </button>
+              {/* Hamburger for mobile */}
+              <div className="md:hidden flex items-center">
+                <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                  <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
