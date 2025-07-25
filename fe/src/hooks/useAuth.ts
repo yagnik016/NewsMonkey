@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@/types';
-
-const API_URL = process.env.LIVE_API_BASEURL || 'https://newsmonkey-be.vercel.app/';
+import { API_BASE_URL } from '@/utils/apiConfig';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -15,7 +14,7 @@ export function useAuth() {
 
   const login = useCallback(async (email: string, password: string) => {
     setLoading(true);
-    const res = await fetch(`${API_URL}/users/login`, {
+    const res = await fetch(`${API_BASE_URL}users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -25,7 +24,7 @@ export function useAuth() {
     // Fetch user profile
     const payload = JSON.parse(atob(token.split('.')[1]));
     const userId = payload.sub;
-    const userRes = await fetch(`${API_URL}/users/${userId}`);
+    const userRes = await fetch(`${API_BASE_URL}users/${userId}`);
     const userData = await userRes.json();
     const userObj = { ...userData, token };
     setUser(userObj);
@@ -36,7 +35,7 @@ export function useAuth() {
 
   const register = useCallback(async (email: string, password: string, name: string) => {
     setLoading(true);
-    const res = await fetch(`${API_URL}/users/register`, {
+    const res = await fetch(`${API_BASE_URL}users/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, name }),

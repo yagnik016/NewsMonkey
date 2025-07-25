@@ -132,15 +132,15 @@ export function LiveBlogsWidget() {
                 className="neon-tilt"
               >
                 <motion.div
-                  key={blog._id}
+                key={blog._id}
                   className="snap-center min-w-[320px] max-w-xs bg-white dark:bg-slate-900/30 border border-gray-200 dark:border-cyan-300 rounded-3xl shadow p-6 flex flex-col justify-between relative overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-md dark:hover:shadow-cyan-400/40 animate-fadeIn"
-                  style={{ animationDelay: `${idx * 80}ms` }}
+                style={{ animationDelay: `${idx * 80}ms` }}
                   initial={{ opacity: 0, y: 40, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   whileHover={{ scale: 1.03, boxShadow: '0 2px 8px 0 #e5e7eb' }}
                   transition={{ type: 'spring', stiffness: 180, damping: 18, delay: idx * 0.08 }}
-                >
-                  <div className="flex items-center mb-2">
+              >
+                <div className="flex items-center mb-2">
                     <span className="mr-2 flex items-center justify-center" style={{ width: 24, height: 24, position: 'relative' }}>
                       <span
                         className="block w-6 h-6 rounded-full bg-cyan-400 border-2 border-blue-500 shadow-lg"
@@ -157,9 +157,9 @@ export function LiveBlogsWidget() {
                     >
                       LIVE
                     </span>
-                  </div>
+                </div>
                   <h3 className="text-lg font-bold text-white mb-1 truncate group-hover:underline transition-all duration-200 drop-shadow-lg neon-text">{blog.title}</h3>
-                  <p className="text-white/80 text-sm truncate mb-2">{blog.description}</p>
+                <p className="text-white/80 text-sm truncate mb-2">{blog.description}</p>
                   <Link href={`/live-blogs/${blog._id}`} className="relative bg-black text-white dark:bg-gradient-to-r dark:from-blue-600 dark:via-cyan-400 dark:to-blue-600 dark:hover:from-blue-700 dark:hover:to-blue-700 rounded-full font-semibold shadow transition-all text-xs font-medium text-center shimmer-btn-glass px-4 py-2 mt-2">Follow Updates →</Link>
                   <div className="absolute top-0 right-0 m-3 w-8 h-8 bg-gray-200 dark:bg-gradient-to-br dark:from-blue-400/60 dark:to-cyan-400/40 rounded-full blur-2xl animate-pulse-glow" />
                   <div className="absolute inset-0 pointer-events-none z-0 bg-transparent dark:animated-gradient-bg-blue" />
