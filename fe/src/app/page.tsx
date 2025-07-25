@@ -1,9 +1,7 @@
 import Link from 'next/link';
 import { FeaturedNews } from '@/components/FeaturedNews';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { fetchNewsApi } from '@/utils/fetchNewsApi';
 import ParallaxBg from '@/components/ParallaxBg';
-import UserMenu from '@/components/UserMenu';
 import HomePageContent from './HomePageContent';
 import NavbarClientWrapper from '@/components/NavbarClientWrapper';
 
