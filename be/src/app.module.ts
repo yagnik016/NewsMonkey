@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 import { NewsModule } from './modules/news/news.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
@@ -17,6 +18,7 @@ import { LeaderboardModule } from './modules/leaderboard/leaderboard.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ScheduleModule.forRoot(),
     MongooseModule.forRoot("mongodb+srv://yagnik016:9VEuaL6wkWUcnG94@cluster0.szvq3ka.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"),
     NewsModule,
     AuthModule,

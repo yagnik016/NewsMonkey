@@ -1,5 +1,6 @@
 import React from 'react';
 import { API_BASE_URL } from '@/utils/apiConfig';
+import Image from 'next/image';
 
 async function fetchGamingData() {
   try {
@@ -56,7 +57,13 @@ export default async function GamingPage() {
               <div key={game._id} className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 {game.imageUrl && (
                   <div className="h-48 bg-gray-200 dark:bg-gray-700">
-                    <img src={game.imageUrl} alt={game.title} width={400} height={192} className="w-full h-full object-cover" />
+                    <Image
+                      src={game.imageUrl}
+                      alt={game.title}
+                      width={400}
+                      height={192}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 )}
                 <div className="p-6">

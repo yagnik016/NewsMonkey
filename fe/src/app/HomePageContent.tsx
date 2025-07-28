@@ -198,7 +198,15 @@ function Leaderboard() {
   );
 }
 
-export default function HomePageContent({ categoriesData, newsData, newsError }: { categoriesData: unknown, newsData: unknown[], newsError: boolean }) {
+export default function HomePageContent({ 
+  categoriesData, 
+  newsData = [], 
+  newsError = false 
+}: { 
+  categoriesData: unknown, 
+  newsData?: unknown[], 
+  newsError?: boolean 
+}) {
   const { user } = useAuthContext();
   const isPremium = user && user.isSubscriber;
   

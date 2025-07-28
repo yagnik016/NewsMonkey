@@ -2,15 +2,26 @@
 
 import { useState, useEffect } from 'react';
 
-export function BreakingNews() {
+interface BreakingNewsProps {
+  articles: Array<{
+    title: string;
+    summary?: string;
+    publishedAt: string;
+  }>;
+}
+
+export function BreakingNews({ articles }: BreakingNewsProps) {
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
   
-  const breakingNews = [
-    "BREAKING: Major tech company announces revolutionary AI breakthrough",
-    "LIVE: Global summit begins with world leaders discussing climate action",
-    "URGENT: New medical treatment shows 95% success rate in trials",
-    "ALERT: Sports championship breaks all previous viewership records"
-  ];
+  // Use provided articles or fallback to default breaking news
+  const breakingNews = articles.length > 0 
+    ? articles.map(article => article.title)
+    : [
+        "BREAKING: Major tech company announces revolutionary AI breakthrough",
+        "LIVE: Global summit begins with world leaders discussing climate action",
+        "URGENT: New medical treatment shows 95% success rate in trials",
+        "ALERT: Sports championship breaks all previous viewership records"
+      ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -19,6 +30,8 @@ export function BreakingNews() {
 
     return () => clearInterval(interval);
   }, [breakingNews.length]);
+
+  if (breakingNews.length === 0) return null;
 
   return (
     <div className="bg-red-600 text-white py-2">

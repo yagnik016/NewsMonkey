@@ -14,46 +14,65 @@ const NAV_LINKS = [
 export default function Navbar() {
   const pathname = usePathname();
   return (
-    <Disclosure as="nav" className="bg-white dark:bg-[#1e2633] rounded-b-2xl shadow-lg sticky top-0 z-50 border-b border-gray-200 dark:border-[var(--border)] transition-colors">
+    <Disclosure as="nav" className="bg-[var(--card-bg)]/95 backdrop-blur-md shadow-lg fixed top-0 left-0 right-0 z-50 border-b border-[var(--border)] transition-all duration-300">
       {({ open }) => (
         <>
           {/* Hide main navbar content when mobile menu is open */}
           <div className={`${open ? 'hidden' : ''}`}> 
-            <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-              <div className="flex items-center justify-between py-4 gap-1 flex-wrap">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between h-16">
                 {/* Left: Logo */}
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400 truncate">NewsMonkey</span>
+                <div className="flex items-center">
+                  <span className="text-2xl font-extrabold text-[var(--primary)] transition-colors duration-300">
+                    NewsMonkey
+                  </span>
                 </div>
+                
                 {/* Center: Nav Links (hidden on mobile) */}
-                <div className="hidden lg:flex gap-2 ml-2">
+                <div className="hidden md:flex items-center space-x-1">
                   {NAV_LINKS.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${pathname === link.href ? 'bg-blue-100 text-blue-700 dark:bg-gray-900 dark:text-white' : 'text-gray-900 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white'}`}
+                      className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 relative overflow-hidden group ${
+                        pathname === link.href 
+                          ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-lg' 
+                          : 'text-[var(--foreground)] hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800'
+                      }`}
                     >
                       {link.label}
                     </Link>
                   ))}
                 </div>
+                
                 {/* Right: Actions */}
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button className="hidden lg:inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-blue-700 hover:to-cyan-500 transition">
-                    + Subscribe
+                <div className="flex items-center space-x-3">
+                  {/* Subscribe Button */}
+                  <button className="hidden lg:inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-400 hover:from-blue-700 hover:to-cyan-500 text-white px-4 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Subscribe
                   </button>
-                  <ThemeToggle />
+                  
+                  {/* User Menu */}
                   <UserMenu />
-                  {/* Hamburger for mobile */}
-                  <div className="flex items-center lg:hidden flex-shrink-0">
-                    <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-white hover:bg-blue-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                  
+                  {/* Theme Toggle */}
+                  <div className="flex items-center">
+                    <ThemeToggle />
+                  </div>
+                  
+                  {/* Mobile Menu Button */}
+                  <div className="md:hidden">
+                    <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-xl text-[var(--foreground)] hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
-                        <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       ) : (
-                        <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <svg className="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                       )}
@@ -64,35 +83,49 @@ export default function Navbar() {
             </div>
           </div>
           {/* Mobile Menu */}
-          <Disclosure.Panel className="lg:hidden bg-white dark:bg-[#1e2633] rounded-b-2xl shadow-lg px-4 pt-4 pb-6 border-b border-gray-200 dark:border-[var(--border)]">
-            {/* Top row: logo and close button */}
-            <div className="flex items-center justify-between mb-8">
-              <span className="text-2xl font-extrabold text-blue-600 dark:text-blue-400">NewsMonkey</span>
-              <Disclosure.Button className="text-3xl text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                &times;
-              </Disclosure.Button>
-            </div>
-            {/* Nav links */}
-            <nav className="flex flex-col gap-3 mb-8">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block w-full text-center px-3 py-2 rounded-lg font-medium transition-colors duration-200 ${pathname === link.href ? 'bg-blue-100 text-blue-700 dark:bg-gray-900 dark:text-white' : 'text-gray-900 hover:bg-blue-50 hover:text-blue-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white'}`}
-                  onClick={() => document.activeElement && (document.activeElement as HTMLElement).blur()}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-            {/* Subscribe button */}
-            <button className="w-full mb-8 bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-4 py-3 rounded-lg font-semibold shadow hover:from-blue-700 hover:to-cyan-500 transition text-lg">
-              + Subscribe
-            </button>
-            {/* User actions at the bottom */}
-            <div className="flex gap-4 justify-center">
-              <ThemeToggle />
-              <UserMenu />
+          <Disclosure.Panel className="md:hidden bg-[var(--card-bg)]/95 backdrop-blur-md shadow-lg border-b border-[var(--border)] transition-all duration-300">
+            <div className="px-4 py-6 space-y-6">
+              {/* Logo and Close */}
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-extrabold text-[var(--primary)] transition-colors duration-300">NewsMonkey</span>
+                <Disclosure.Button className="p-2 rounded-xl text-[var(--foreground)] hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-300">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </Disclosure.Button>
+              </div>
+              
+              {/* Navigation Links */}
+              <nav className="space-y-2">
+                {NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block w-full px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                      pathname === link.href 
+                        ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-lg' 
+                        : 'text-[var(--foreground)] hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-gray-800'
+                    }`}
+                    onClick={() => document.activeElement && (document.activeElement as HTMLElement).blur()}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+              
+              {/* Subscribe Button */}
+              <button className="w-full bg-gradient-to-r from-blue-600 to-cyan-400 hover:from-blue-700 hover:to-cyan-500 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Subscribe
+              </button>
+              
+              {/* User Actions */}
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                <UserMenu />
+                <ThemeToggle />
+              </div>
             </div>
           </Disclosure.Panel>
         </>

@@ -6,7 +6,7 @@ import { IconType } from "react-icons";
 import Image from "next/image";
 import ParallaxBg from '@/components/ParallaxBg';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchNewsApi } from "@/utils/fetchNewsApi";
+import { fetchNewsApi, NewsArticle } from "@/utils/fetchNewsApi";
 
 const TOPICS = [
   { label: "General", value: "general", color: "from-pink-500 to-yellow-500", icon: FaRegNewspaper },
@@ -19,18 +19,6 @@ const TOPICS = [
 ];
 
 const PAGE_SIZE = 12;
-
-// NewsAPI article type
-type NewsArticle = {
-  source: { id: string | null; name: string };
-  author: string | null;
-  title: string;
-  description: string | null;
-  url: string;
-  urlToImage: string | null;
-  publishedAt: string;
-  content: string | null;
-};
 
 function isNewArticle(publishedAt: string) {
   return (Date.now() - new Date(publishedAt).getTime()) < 24 * 60 * 60 * 1000;
@@ -67,7 +55,7 @@ export default function NewsPage() {
       setLoading(true);
       setError("");
       try {
-        const articles = await fetchNewsApi({ country: 'us', category: selectedTopic, page, pageSize: PAGE_SIZE });
+        const articles = await fetchNewsApi({ category: selectedTopic, page, pageSize: PAGE_SIZE });
         setArticles((prev) => (page === 1 ? articles : [...prev, ...articles]));
         setHasMore(articles.length === PAGE_SIZE);
       } catch (err) {
@@ -213,7 +201,7 @@ export default function NewsPage() {
               >
                 <div className="overflow-hidden rounded-t-xl relative">
                   <Image
-                    src={article.urlToImage || "/placeholder.jpg"}
+                    src={article.images?.[0] || article.urlToImage || "/placeholder.jpg"}
                     alt={article.title}
                     width={400}
                     height={250}
@@ -226,16 +214,16 @@ export default function NewsPage() {
                   {isNewArticle(article.publishedAt) && (
                     <span className="absolute top-2 left-2 bg-gradient-to-r from-yellow-400 to-pink-500 text-xs font-bold px-3 py-1 rounded-full text-white shadow animate-pulse">NEW</span>
                   )}
-                  <CardOverlay source={article.source.name} publishedAt={article.publishedAt} />
+                  <CardOverlay source={article.source || article.category?.name || 'RSS Feed'} publishedAt={article.publishedAt} />
                 </div>
                 <div className="flex-1 flex flex-col px-5 py-4">
                   <h2 className="font-bold text-lg mb-2 line-clamp-2 text-white/90 group-hover:text-yellow-300 transition-colors duration-300">
                     {article.title}
                   </h2>
-                  <p className="text-neutral-300 text-sm mb-3 line-clamp-3">{article.description}</p>
+                  <p className="text-neutral-300 text-sm mb-3 line-clamp-3">{article.summary || article.content}</p>
                   <div className="flex items-center gap-3 mt-auto">
                     <a
-                      href={article.url}
+                      href={article.externalUrl || article.url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-purple-300 hover:text-yellow-300 font-semibold text-sm transition-colors"
@@ -246,17 +234,17 @@ export default function NewsPage() {
                     </a>
                     <button
                       className="ml-auto text-xl text-yellow-400 hover:text-yellow-300 transition-colors duration-200 focus:outline-none"
-                      onClick={() => toggleBookmark(article.url)}
-                      aria-label={bookmarks[article.url] ? "Remove bookmark" : "Add bookmark"}
+                      onClick={() => toggleBookmark(article.externalUrl || article.url || article._id)}
+                      aria-label={bookmarks[article.externalUrl || article.url || article._id] ? "Remove bookmark" : "Add bookmark"}
                       tabIndex={0}
                     >
                       <motion.span whileTap={{ scale: 1.3, rotate: -20 }} whileHover={{ scale: 1.15 }}>
-                        {bookmarks[article.url] ? <FaBookmark /> : <FaRegBookmark />}
+                        {bookmarks[article.externalUrl || article.url || article._id] ? <FaBookmark /> : <FaRegBookmark />}
                       </motion.span>
                     </button>
                     <div className="relative">
                         <button
-                          onClick={() => handleShare(article.url)}
+                          onClick={() => handleShare(article.externalUrl || article.url || article._id)}
                           className="ml-2 text-blue-400 hover:text-blue-600 transition-colors"
                           aria-label="Share article"
                           tabIndex={0}
@@ -266,7 +254,7 @@ export default function NewsPage() {
                           </motion.span>
                         </button>
                         <AnimatePresence>
-                          {showShare === article.url && (
+                          {showShare === (article.externalUrl || article.url || article._id) && (
                             <motion.span
                               initial={{ opacity: 0, y: -10 }}
                               animate={{ opacity: 1, y: 0 }}

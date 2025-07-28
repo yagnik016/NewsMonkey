@@ -141,26 +141,25 @@ export function LiveBlogsWidget() {
                   transition={{ type: 'spring', stiffness: 180, damping: 18, delay: idx * 0.08 }}
               >
                 <div className="flex items-center mb-2">
-                    <span className="mr-2 flex items-center justify-center" style={{ width: 24, height: 24, position: 'relative' }}>
+                    <span className="mr-2 flex items-center justify-center" style={{ width: 12, height: 12, position: 'relative' }}>
                       <span
-                        className="block w-6 h-6 rounded-full bg-cyan-400 border-2 border-blue-500 shadow-lg"
+                        className="block w-3 h-3 rounded-full bg-red-500 dark:bg-red-400 border-2 border-red-500 dark:border-red-400 shadow-sm"
                         style={{
-                          boxShadow: '0 0 16px 6px #38bdf8, 0 0 32px 12px #2563eb99',
+                          boxShadow: '0 0 8px 3px #ef4444, 0 0 16px 6px rgba(239, 68, 68, 0.6)',
                           animation: 'spin-slow 2.5s linear infinite, pulse-glow-blue 1.2s infinite'
                         }}
                       />
-                      <span className="absolute left-1 top-1 w-2 h-2 bg-white rounded-full" />
                     </span>
                     <span
-                      className="text-black dark:text-cyan-300 font-semibold text-xs uppercase tracking-wider ml-1"
+                      className="text-gray-700 dark:text-red-500 font-bold text-xs uppercase tracking-wider ml-1"
                       style={{ border: 'none', outline: 'none', boxShadow: 'none', background: 'none' }}
                     >
                       LIVE
                     </span>
                 </div>
-                  <h3 className="text-lg font-bold text-white mb-1 truncate group-hover:underline transition-all duration-200 drop-shadow-lg neon-text">{blog.title}</h3>
-                <p className="text-white/80 text-sm truncate mb-2">{blog.description}</p>
-                  <Link href={`/live-blogs/${blog._id}`} className="relative bg-black text-white dark:bg-gradient-to-r dark:from-blue-600 dark:via-cyan-400 dark:to-blue-600 dark:hover:from-blue-700 dark:hover:to-blue-700 rounded-full font-semibold shadow transition-all text-xs font-medium text-center shimmer-btn-glass px-4 py-2 mt-2">Follow Updates →</Link>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 truncate group-hover:underline transition-all duration-200 drop-shadow-lg">{blog.title}</h3>
+                <p className="text-gray-600 dark:text-white/80 text-sm truncate mb-2">{blog.description}</p>
+                  <Link href={`/live-blogs/${blog._id}`} className="relative bg-red-600 hover:bg-red-700 text-white dark:bg-gradient-to-r dark:from-blue-600 dark:via-cyan-400 dark:to-blue-600 dark:hover:from-blue-700 dark:hover:to-blue-700 rounded-full font-semibold shadow transition-all text-xs font-medium text-center shimmer-btn-glass px-4 py-2 mt-2">Follow Updates →</Link>
                   <div className="absolute top-0 right-0 m-3 w-8 h-8 bg-gray-200 dark:bg-gradient-to-br dark:from-blue-400/60 dark:to-cyan-400/40 rounded-full blur-2xl animate-pulse-glow" />
                   <div className="absolute inset-0 pointer-events-none z-0 bg-transparent dark:animated-gradient-bg-blue" />
                 </motion.div>
@@ -231,10 +230,10 @@ export function LiveBlogsWidget() {
           opacity: 0.13;
           animation: gradientMove 4s linear infinite alternate;
         }
-        @keyframes pulse-glow-blue {
-          0%, 100% { box-shadow: 0 0 0 0 #38bdf8; }
-          50% { box-shadow: 0 0 16px 6px #38bdf8, 0 0 32px 12px #2563eb99; }
-        }
+                  @keyframes pulse-glow-blue {
+            0%, 100% { box-shadow: 0 0 0 0 #ef4444; }
+            50% { box-shadow: 0 0 16px 6px #ef4444, 0 0 32px 12px rgba(239, 68, 68, 0.6); }
+          }
       `}</style>
     </section>
   );

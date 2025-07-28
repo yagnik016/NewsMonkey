@@ -22,6 +22,8 @@ import { UpdateNewsDto } from './dto/update-news.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { NewsApiImportService } from './newsapi-import.service';
+import { RssImportService } from './rss-import.service';
+import { ScheduledImportService } from './scheduled-import.service';
 
 @ApiTags('News')
 @Controller('news')
@@ -29,6 +31,8 @@ export class NewsController {
   constructor(
     private readonly newsService: NewsService,
     private readonly newsApiImportService: NewsApiImportService,
+    private readonly rssImportService: RssImportService,
+    private readonly scheduledImportService: ScheduledImportService,
   ) {}
 
   // News endpoints
@@ -153,5 +157,102 @@ export class NewsController {
   @ApiOperation({ summary: 'Delete a category' })
   async deleteCategory(@Param('id') id: string) {
     return this.newsService.deleteCategory(id);
+  }
+
+  // RSS Import endpoints
+  @Post('import/rss')
+  @ApiOperation({ summary: 'Import news from RSS feeds' })
+  @ApiQuery({ name: 'category', required: false, type: String })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiResponse({ status: 200, description: 'News imported successfully from RSS' })
+  async importFromRss(
+    @Query('category') category?: string,
+    @Query('limit') limit?: number,
+  ) {
+    if (category) {
+      const imported = await this.rssImportService.importFromRss(category, limit || 20);
+      return { message: `Imported ${imported} articles from RSS feeds (${category})` };
+    } else {
+      const imported = await this.rssImportService.importAllCategories();
+      return { message: `Imported ${imported} articles from RSS feeds` };
+    }
+  }
+
+  @Post('import/rss/all')
+  @ApiOperation({ summary: 'Import news from all RSS feeds' })
+  @ApiResponse({ status: 200, description: 'News imported from all RSS feeds' })
+  async importAllFromRss() {
+    const imported = await this.rssImportService.importAllCategories();
+    return { message: `Imported ${imported} articles from all RSS feeds` };
+  }
+
+  // Manual RSS Import endpoints
+  @Post('import/rss/now')
+  @ApiOperation({ summary: 'Trigger immediate RSS import' })
+  @ApiQuery({ name: 'category', required: false, type: String })
+  @ApiResponse({ status: 200, description: 'RSS import triggered successfully' })
+  async triggerRssImport(@Query('category') category?: string) {
+    try {
+      const imported = await this.scheduledImportService.triggerManualImport(category);
+      return { 
+        message: `RSS import completed successfully`,
+        imported,
+        category: category || 'all categories'
+      };
+    } catch (error) {
+      return {
+        message: `RSS import failed: ${error.message}`,
+        imported: 0,
+        category: category || 'all categories',
+        error: true
+      };
+    }
+  }
+
+  // Simple RSS import endpoint
+  @Post('import/rss/simple')
+  @ApiOperation({ summary: 'Simple RSS import without scheduled service' })
+  @ApiQuery({ name: 'category', required: false, type: String })
+  @ApiResponse({ status: 200, description: 'Simple RSS import completed' })
+  async simpleRssImport(@Query('category') category?: string) {
+    try {
+      if (category) {
+        const imported = await this.rssImportService.importFromRss(category, 20);
+        return { 
+          message: `Simple RSS import completed`,
+          imported,
+          category
+        };
+      } else {
+        const imported = await this.rssImportService.importAllCategories();
+        return { 
+          message: `Simple RSS import completed`,
+          imported,
+          category: 'all categories'
+        };
+      }
+    } catch (error) {
+      return {
+        message: `Simple RSS import failed: ${error.message}`,
+        imported: 0,
+        category: category || 'all categories',
+        error: true
+      };
+    }
+  }
+
+  // Test endpoint to verify backend is working
+  @Get('test')
+  @ApiOperation({ summary: 'Test endpoint to verify backend functionality' })
+  async testEndpoint() {
+    return {
+      message: 'Backend is working!',
+      timestamp: new Date().toISOString(),
+      services: {
+        newsService: !!this.newsService,
+        rssImportService: !!this.rssImportService,
+        scheduledImportService: !!this.scheduledImportService
+      }
+    };
   }
 } 

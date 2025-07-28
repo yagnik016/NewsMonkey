@@ -45,4 +45,5 @@ export interface User {
   interests: string[];
   token?: string;
   isSubscriber?: boolean;
+  profileImage?: string;
 } 
