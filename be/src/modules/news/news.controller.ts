@@ -7,7 +7,7 @@ import {
   Body,
   Param,
   Query,
-  UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -16,6 +16,8 @@ import {
   ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
+import { isValidObjectId } from 'mongoose';
+
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
@@ -35,7 +37,40 @@ export class NewsController {
     private readonly scheduledImportService: ScheduledImportService,
   ) {}
 
-  // News endpoints
+  // Static routes FIRST
+  @Get('health')
+  @ApiOperation({ summary: 'Simple health check' })
+  async healthCheck() {
+    return {
+      message: 'Backend is healthy',
+      timestamp: new Date().toISOString(),
+      status: 'ok'
+    };
+  }
+
+  @Get('test')
+  @ApiOperation({ summary: 'Test endpoint to verify backend functionality' })
+  async testEndpoint() {
+    try {
+      return {
+        message: 'Backend is working!',
+        timestamp: new Date().toISOString(),
+        services: {
+          newsService: !!this.newsService,
+          rssImportService: !!this.rssImportService,
+          scheduledImportService: !!this.scheduledImportService
+        }
+      };
+    } catch (error) {
+      return {
+        message: `Backend test failed: ${error.message}`,
+        timestamp: new Date().toISOString(),
+        error: true
+      };
+    }
+  }
+
+  // News CRUD
   @Post()
   @ApiOperation({ summary: 'Create a new news article' })
   @ApiResponse({ status: 201, description: 'News article created successfully' })
@@ -62,7 +97,7 @@ export class NewsController {
     return { message: `Imported ${imported} articles from NewsAPI.` };
   }
 
-  // Place all specific routes before the generic :id route
+  // Category routes
   @Post('categories')
   @ApiOperation({ summary: 'Create a new category' })
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
@@ -75,6 +110,25 @@ export class NewsController {
     return this.newsService.findAllCategories();
   }
 
+  @Get('categories/:id')
+  @ApiOperation({ summary: 'Get a specific category by ID' })
+  async getCategoryById(@Param('id') id: string) {
+    return this.newsService.findCategoryById(id);
+  }
+
+  @Put('categories/:id')
+  @ApiOperation({ summary: 'Update a category' })
+  async updateCategory(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    return this.newsService.updateCategory(id, updateCategoryDto);
+  }
+
+  @Delete('categories/:id')
+  @ApiOperation({ summary: 'Delete a category' })
+  async deleteCategory(@Param('id') id: string) {
+    return this.newsService.deleteCategory(id);
+  }
+
+  // News filters and aggregations
   @Get('breaking')
   @ApiOperation({ summary: 'Get breaking news' })
   async getBreakingNews() {
@@ -121,54 +175,13 @@ export class NewsController {
     return this.newsService.getNewsByCategory(slug, query);
   }
 
-  // Now the generic :id route
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a specific news article by ID' })
-  async getNewsById(@Param('id') id: string) {
-    return this.newsService.findNewsById(id);
-  }
-
-  @Put(':id')
-  @ApiOperation({ summary: 'Update a news article' })
-  async updateNews(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
-    return this.newsService.updateNews(id, updateNewsDto);
-  }
-
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete a news article' })
-  async deleteNews(@Param('id') id: string) {
-    return this.newsService.deleteNews(id);
-  }
-
-  // Category endpoints
-  @Get('categories/:id')
-  @ApiOperation({ summary: 'Get a specific category by ID' })
-  async getCategoryById(@Param('id') id: string) {
-    return this.newsService.findCategoryById(id);
-  }
-
-  @Put('categories/:id')
-  @ApiOperation({ summary: 'Update a category' })
-  async updateCategory(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.newsService.updateCategory(id, updateCategoryDto);
-  }
-
-  @Delete('categories/:id')
-  @ApiOperation({ summary: 'Delete a category' })
-  async deleteCategory(@Param('id') id: string) {
-    return this.newsService.deleteCategory(id);
-  }
-
-  // RSS Import endpoints
+  // RSS Imports
   @Post('import/rss')
   @ApiOperation({ summary: 'Import news from RSS feeds' })
   @ApiQuery({ name: 'category', required: false, type: String })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiResponse({ status: 200, description: 'News imported successfully from RSS' })
-  async importFromRss(
-    @Query('category') category?: string,
-    @Query('limit') limit?: number,
-  ) {
+  async importFromRss(@Query('category') category?: string, @Query('limit') limit?: number) {
     if (category) {
       const imported = await this.rssImportService.importFromRss(category, limit || 20);
       return { message: `Imported ${imported} articles from RSS feeds (${category})` };
@@ -186,7 +199,6 @@ export class NewsController {
     return { message: `Imported ${imported} articles from all RSS feeds` };
   }
 
-  // Manual RSS Import endpoints
   @Post('import/rss/now')
   @ApiOperation({ summary: 'Trigger immediate RSS import' })
   @ApiQuery({ name: 'category', required: false, type: String })
@@ -194,7 +206,7 @@ export class NewsController {
   async triggerRssImport(@Query('category') category?: string) {
     try {
       const imported = await this.scheduledImportService.triggerManualImport(category);
-      return { 
+      return {
         message: `RSS import completed successfully`,
         imported,
         category: category || 'all categories'
@@ -209,7 +221,6 @@ export class NewsController {
     }
   }
 
-  // Simple RSS import endpoint
   @Post('import/rss/simple')
   @ApiOperation({ summary: 'Simple RSS import without scheduled service' })
   @ApiQuery({ name: 'category', required: false, type: String })
@@ -218,14 +229,14 @@ export class NewsController {
     try {
       if (category) {
         const imported = await this.rssImportService.importFromRss(category, 20);
-        return { 
+        return {
           message: `Simple RSS import completed`,
           imported,
           category
         };
       } else {
         const imported = await this.rssImportService.importAllCategories();
-        return { 
+        return {
           message: `Simple RSS import completed`,
           imported,
           category: 'all categories'
@@ -241,37 +252,25 @@ export class NewsController {
     }
   }
 
-  // Simple health check endpoint
-  @Get('health')
-  @ApiOperation({ summary: 'Simple health check' })
-  async healthCheck() {
-    return {
-      message: 'Backend is healthy',
-      timestamp: new Date().toISOString(),
-      status: 'ok'
-    };
+  // Final: Dynamic route must be last
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a specific news article by ID' })
+  async getNewsById(@Param('id') id: string) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid news article ID');
+    }
+    return this.newsService.findNewsById(id);
   }
 
-  // Test endpoint to verify backend is working
-  @Get('test')
-  @ApiOperation({ summary: 'Test endpoint to verify backend functionality' })
-  async testEndpoint() {
-    try {
-      return {
-        message: 'Backend is working!',
-        timestamp: new Date().toISOString(),
-        services: {
-          newsService: !!this.newsService,
-          rssImportService: !!this.rssImportService,
-          scheduledImportService: !!this.scheduledImportService
-        }
-      };
-    } catch (error) {
-      return {
-        message: `Backend test failed: ${error.message}`,
-        timestamp: new Date().toISOString(),
-        error: true
-      };
-    }
+  @Put(':id')
+  @ApiOperation({ summary: 'Update a news article' })
+  async updateNews(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
+    return this.newsService.updateNews(id, updateNewsDto);
   }
-} 
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a news article' })
+  async deleteNews(@Param('id') id: string) {
+    return this.newsService.deleteNews(id);
+  }
+}
