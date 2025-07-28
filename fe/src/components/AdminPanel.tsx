@@ -74,7 +74,18 @@ export function AdminPanel() {
 
   const testBackend = async () => {
     try {
+      // First try a simple health check
+      const healthResponse = await fetch(`${API_BASE_URL}news/health`);
+      if (!healthResponse.ok) {
+        throw new Error(`Health check failed: ${healthResponse.status}`);
+      }
+      
+      // Then try the test endpoint
       const response = await fetch(`${API_BASE_URL}news/test`);
+      if (!response.ok) {
+        throw new Error(`Test endpoint failed: ${response.status}`);
+      }
+      
       const result = await response.json();
       setStatus({
         message: `Backend test: ${result.message}`,

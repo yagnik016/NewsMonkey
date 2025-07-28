@@ -241,18 +241,37 @@ export class NewsController {
     }
   }
 
+  // Simple health check endpoint
+  @Get('health')
+  @ApiOperation({ summary: 'Simple health check' })
+  async healthCheck() {
+    return {
+      message: 'Backend is healthy',
+      timestamp: new Date().toISOString(),
+      status: 'ok'
+    };
+  }
+
   // Test endpoint to verify backend is working
   @Get('test')
   @ApiOperation({ summary: 'Test endpoint to verify backend functionality' })
   async testEndpoint() {
-    return {
-      message: 'Backend is working!',
-      timestamp: new Date().toISOString(),
-      services: {
-        newsService: !!this.newsService,
-        rssImportService: !!this.rssImportService,
-        scheduledImportService: !!this.scheduledImportService
-      }
-    };
+    try {
+      return {
+        message: 'Backend is working!',
+        timestamp: new Date().toISOString(),
+        services: {
+          newsService: !!this.newsService,
+          rssImportService: !!this.rssImportService,
+          scheduledImportService: !!this.scheduledImportService
+        }
+      };
+    } catch (error) {
+      return {
+        message: `Backend test failed: ${error.message}`,
+        timestamp: new Date().toISOString(),
+        error: true
+      };
+    }
   }
 } 
