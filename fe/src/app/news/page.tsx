@@ -34,12 +34,21 @@ export default function NewsPage() {
   const [bookmarks, setBookmarks] = useState<{[url: string]: boolean}>({});
   const [showShare, setShowShare] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
 
+  // Fetch categories on mount
   useEffect(() => {
-    // Load bookmarks from localStorage
-    const stored = localStorage.getItem('newsmonkey_bookmarks');
-    if (stored) setBookmarks(JSON.parse(stored));
+    fetch('https://newsmonkey-be.vercel.app/news/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(() => setCategories([]));
   }, []);
+
+  // Helper to get ObjectId for selected topic
+  const getCategoryId = (slug: string) => {
+    const cat = categories.find((c) => c.slug === slug);
+    return cat ? cat._id : undefined;
+  };
 
   // Reset articles when topic changes
   useEffect(() => {
@@ -55,7 +64,8 @@ export default function NewsPage() {
       setLoading(true);
       setError("");
       try {
-        const articles = await fetchNewsApi({ category: selectedTopic, page, pageSize: PAGE_SIZE });
+        const categoryId = getCategoryId(selectedTopic);
+        const articles = await fetchNewsApi({ category: categoryId, page, pageSize: PAGE_SIZE });
         setArticles((prev) => (page === 1 ? articles : [...prev, ...articles]));
         setHasMore(articles.length === PAGE_SIZE);
       } catch (err) {
@@ -65,8 +75,8 @@ export default function NewsPage() {
         setLoading(false);
       }
     };
-    fetchNews();
-  }, [page, selectedTopic]);
+    if (categories.length > 0) fetchNews();
+  }, [page, selectedTopic, categories]);
 
   // Infinite scroll
   const handleScroll = useCallback(() => {

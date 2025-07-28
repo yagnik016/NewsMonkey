@@ -39,7 +39,11 @@ export class NewsService {
         }
       }
     }
-    if (status) filter.status = status;
+    if (status) {
+      filter.status = status;
+    } else {
+      filter.status = 'published';
+    }
     if (search) {
       filter.$text = { $search: search };
     }
