@@ -34,7 +34,8 @@ export default function NewsPage() {
   const [bookmarks, setBookmarks] = useState<{[url: string]: boolean}>({});
   const [showShare, setShowShare] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+  type Category = { _id: string; name: string; slug: string };
+  const [categories, setCategories] = useState<Category[]>([]);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -43,12 +44,6 @@ export default function NewsPage() {
       .then(data => setCategories(data))
       .catch(() => setCategories([]));
   }, []);
-
-  // Helper to get ObjectId for selected topic
-  const getCategoryId = (slug: string) => {
-    const cat = categories.find((c) => c.slug === slug);
-    return cat ? cat._id : undefined;
-  };
 
   // Reset articles when topic changes
   useEffect(() => {
@@ -64,7 +59,8 @@ export default function NewsPage() {
       setLoading(true);
       setError("");
       try {
-        const categoryId = getCategoryId(selectedTopic);
+        const cat = categories.find((c) => c.slug === selectedTopic);
+        const categoryId = cat ? cat._id : undefined;
         const articles = await fetchNewsApi({ category: categoryId, page, pageSize: PAGE_SIZE });
         setArticles((prev) => (page === 1 ? articles : [...prev, ...articles]));
         setHasMore(articles.length === PAGE_SIZE);
